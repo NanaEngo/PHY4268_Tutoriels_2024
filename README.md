@@ -1,11 +1,14 @@
-# PHY4268_Tutoriels_2024
-Tutoriaux du calcul quantique appliqué à la chmie quantique pour les étudiants de M1 de l'Université de Yaoundé I
+# PHY4268 Tutoriels 2024
 
-Dans cette série de tutoriels, nous allons aborder les différentes composantes d'un algorithme de la VQE permettant de faire des simulations moléculaires.
+Le calcul quantique impacte de nombreux secteurs technologiques et pharmacetiques. La Figure ci-dessous pour présente les applications dans le domaine de l'énergie.
+
+![CoverVQE.jpg](./Graphics/CoverVQE.jpg)
+
+Dans cette série de tutoriaux, sur le calcul quantique appliqué à la chimie quantique qui s'adressent aux étudiants de M1 de l'Université de Yaoundé I. Nous y explorons les différentes composantes d'un algorithme du VQE (Variational Quantum Eigensolver) permettant de faire des simulations moléculaires.
 
 ![VQE_Flowchart_Tuto1.jpeg](./Graphics/VQE_Flowchart.jpeg)
 
-A l'issue de cette série de tutoriels, en utilisant les frameworks de calculs de chimie quantique **PySCF** et de cacul quantique **qiskit**, l'étudiant doit être capable
+A l'issue de cette série de tutoriaux, en utilisant les frameworks de calculs de chimie quantique **PySCF** et de cacul quantique **qiskit**, l'étudiant doit être capable
   * d'expliquer certains concepts des méthodes modernes de chimie quantique : Hartree-Fock et la théorie fonctionnelle de la densité (DFT) ;
   * d'interpréter les résultats calculés en termes d'orbitales moléculaires et de modèles de structure électronique ;
   * d'implémenter l'algorithme de la VQE avec qiskit-nature;
