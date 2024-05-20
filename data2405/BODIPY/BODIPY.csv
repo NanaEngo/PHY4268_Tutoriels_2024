@@ -1,27 +1,17 @@
 
 
-HF calculations of BODIPY without anay optimization 
-,Energy (a.u.)
-Total Energy,-677.2517255675278
-Nuclear Repulsion Energy,861.3557763529096
-One-electron Energy,-2638.1343034956553
-Two-electron Energy,1099.5268015752179
-HL gap (eV),7.850094774187259
+xtb calculations of BODIPY  
+,xtb calc
+HOMO-LUMO GAP (eV),1.790734123982
+TOTAL ENERGY (a.u.),-39.530635134793
+HOMO Index,35.0
+LUMO Index,36.0
 
 
 HF calculations of BODIPY with xTB optimization 
-,Energy (a.u.)
-Total Energy,-677.2739975823105
-Nuclear Repulsion Energy,866.7109321691759
-One-electron Energy,-2648.63376782774
-Two-electron Energy,1104.6488380762537
-HL gap (eV),7.934646617576123
-
-
-HF calculations of BODIPY with RDKit optimization 
-,Energy (a.u.)
-Total Energy,-677.2517255772003
-Nuclear Repulsion Energy,861.3557868967506
-One-electron Energy,-2638.1343252217775
-Two-electron Energy,1099.5268127478266
-HL gap (eV),7.850093735499034
+,Energy 3 (a.u.)
+Total Energy,-677.2739986579279
+Nuclear Repulsion Energy,866.7103110984999
+One-electron Energy,-2648.6325990287005
+Two-electron Energy,1104.6482892722727
+HL gap (eV),7.934644192356739
