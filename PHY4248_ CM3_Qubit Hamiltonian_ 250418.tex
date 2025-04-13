@@ -44,7 +44,7 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 \usepackage{float} % Gère le placement des objets flottants
 \floatplacement{figure}{H} % Forces les figures à être placées exactement à l'endroit où elles apparaissent dans le texte
 
-%\usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
+\usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
 \usepackage{array, multicol, wrapfig, lmodern, multirow, booktabs, chemformula} % Diverses améliorations de mise en forme
 \usepackage[detect-all=true, group-minimum-digits=4]{siunitx} % Pour les unités SI
 
@@ -196,7 +196,7 @@ où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. Ces
 
 Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
 
-\paragraph*{Exemple : Molécule de H₂ dans une base minimale}
+\paragraph*{Exemple : Molécule de \ch{H2} dans une base minimale}
 Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
 \begin{itemize}
     \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\Rightarrow h_{01}=h_{10}$).
@@ -210,20 +210,28 @@ Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
     \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
 \end{itemize}
 
-
 \begin{table}[h]
     \centering
     \begin{tabular}{|l|l|l|}
-    \hline
-    \textbf{Intégrale} & \textbf{Expression} & \textbf{Rôle physique} \\ \hline
-    $h_{pq}$ & Éq.~\ref{eq:h_pq} & Énergie cinétique + Attraction noyau-électron \\ \hline
-    $h_{pqrs}$ & Éq.~\ref{eq:h_pqrs} & Répulsion électron-électron entre paires \\ \hline
+    \toprule
+    \textbf{Intégrale} & \textbf{Expression} & \textbf{Rôle physique} \\ \midrule
+    $h_{pq}$ & Éq.~\eqref{eq:h_pq} & Énergie cinétique + Attraction noyau-électron \\ \hline
+    $h_{pqrs}$ & Éq.~\eqref{eq:h_pqrs} & Répulsion électron-électron entre paires \\ \bottomrule
     \end{tabular}
-    \caption{\textbf{Récapitulatif des intégrales moléculaires} \\ Les deux types d'intégrales et leur signification physique.}
+    \caption{\textbf{Récapitulatif des intégrales moléculaires.} Les deux types d'intégrales et leur signification physique.}
     \label{tab:integrales}
 \end{table}
 
-\begin{example}{\faPencilSquareO~ Exercice rapide}{}
+\begin{figure}[h]
+    \centering
+    \resizebox{0.8\textwidth}{!}{\input{hamiltonian_schematic.tikz}}
+    \caption{\textbf{Visualisation de l'Hamiltonien en seconde quantification} \\ 
+    (a) Termes à 1 électron : Mouvement d'un électron entre orbitales. \\
+    (b) Termes à 2 électrons : Interaction Coulombienne entre paires d'électrons.}
+    \label{fig:hamiltonian}
+\end{figure}
+
+\begin{example}{Exercice rapide}{}
 Pour 2 orbitales $\phi_0$, $\phi_1$ :
 \begin{enumerate}
     \item Écrire le terme d'interaction $a_0^\dagger a_1^\dagger a_1 a_0$ en notation normale (avec $n_p = a_p^\dagger a_p$).
