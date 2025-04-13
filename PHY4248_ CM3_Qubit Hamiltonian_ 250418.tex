@@ -349,21 +349,20 @@ Le \autoref{tab:integrales} résume les correspondances entre les éléments du 
     \label{fig:Integrales_fermioniques}
 \end{figure}
 
-
-\paragraph*{Exemple : Molécule de \ch{H2} dans une base minimale}
-Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
-\begin{itemize}
-    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\TO h_{01}=h_{10}$).
-    \item Termes à 2 électrons : Seulement $h_{0011}$ contribue significativement.
-    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
-\end{itemize}
-
 \subsection*{\faExclamationTriangle~ Attention aux pièges !}
 \begin{itemize}
     \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
     \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
 \end{itemize}
 
+\begin{example}{Molécule de \ch{H2} dans une base minimale}{}
+Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
+\begin{itemize}
+    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\TO h_{01}=h_{10}$).
+    \item Termes à 2 électrons : Seule $h_{0011}$ contribue significativement.
+    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
+\end{itemize}
+\end{example}
 
 \begin{example}{Exercice rapide}{}
 Pour 2 orbitales $\phi_0$, $\phi_1$ :
@@ -380,22 +379,6 @@ Pour 2 orbitales $\phi_0$, $\phi_1$ :
 Les orbitales moléculaires ($\phi_u$) peuvent être classées en deux catégories : occupées et virtuelles (inoccupées). Une orbitale moléculaire (OM) peut contenir au maximum deux électrons. Ces électrons doivent avoir des spins opposés, conformément au principe d'exclusion de Pauli. Ces orbitales moléculaires résultent de la méthode de Hartree-Fock (HF), qui suppose que chaque électron est soumis au champ moyen créé par tous les autres électrons.
 
 Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron, ce qui correspond à l'une des deux orientations de spin, ou être inoccupées.
-
-%Le \autoref{tab:Quant12} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
-%
-%\begin{table}[htpb]
-%\begin{tabular}{|l|l|l|}\toprule
-%\textbf{Approximation BO}  &  \textbf{En 2e quantification} &  \textbf{Description} \\ \hline
-%$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \midrule
-%$-\sum_{i,I}\frac{Z_I}{|\mathbf{r}_i-\mathbf{R}_I|}$ &
-%$-\sum_{p,q} \langle p|\frac{Z_I}{|\mathbf{r}_p-\mathbf{R}_I|}|q\rangle a^\dagger_p a_q$ & $\mathtt{U}_{en}$ (interaction noyau-électron) \\ \hline
-%$\sum_{i,j>i}\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}$ & 
-%$\sum_{p,q,r,s}\langle pq \big|\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}\big|rs\rangle a^\dagger_p a^\dagger_q a_r a_s$ & 
-%$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \bottomrule
-%\end{tabular}
-%\caption{Correspondance Première et Seconde Quantification.}
-%\label{tab:Quant12}
-%\end{table}
 
 Un des avantages importants du formalisme de seconde quantification est que la propriété d'anti-symétrie des fonctions d'état pour l'échange de fermions identiques, qui est prise en compte manuellement dans une approche de première quantification à travers les déterminants de Slater, est automatiquement imposée par les relations d'anti-commutation des opérateurs de création et d'annihilation. Cependant, le prix à payer est que l'on travaille avec un nombre non fixe de particules, qui demeure cependant une quantité conservée.
 
