@@ -210,14 +210,33 @@ Nous supposons que l'état Hartree-Fock pour ce système est \textbf{a les deux 
 
 \subsection{Opérateurs fermioniques}
 
-Les opérateurs fermioniques, en particulier les opérateurs de création ($a^\dagger$) et d'annihilation ($a$), sont des outils mathématiques essentiels pour décrire les systèmes de fermions dans le cadre de la seconde quantification. Ces opérateurs permettent de manipuler les états quantiques en ajoutant ou en supprimant des particules, tout en respectant l'antisymétrie, qui est une caractéristique fondamentale des fermions, notamment des électrons. Dans cette section, nous allons définir ces opérateurs et examiner leurs propriétés fondamentales.
+Les opérateurs fermioniques, en particulier les opérateurs de création ($a^\dagger$) et d'annihilation ($a$), sont des outils mathématiques essentiels pour décrire les systèmes de fermions dans le cadre de la seconde quantification. Ces opérateurs permettent de manipuler les états quantiques en ajoutant ou en supprimant des particules, tout en respectant l'antisymétrie, qui est une caractéristique fondamentale des fermions. Dans cette section, nous allons définir ces opérateurs et examiner leurs propriétés fondamentales.
 
 Les opérateurs fermioniques $a^\dagger_i$ et $a_i$ obéissent aux relations d'anticommutation fermioniques suivantes :
+Les opérateurs fermioniques $a^\dagger_i$ et $a_i$ obéissent aux relations d'anticommutation fermioniques suivantes :
 \begin{align}\label{eq:anticommutation}
-& \{a_p, a^\dagger_q\} = a_p a^\dagger_q + a^\dagger_q a_p = \delta_{pq}, \\
+& \{a_p, a^\dagger_q\} = a_p a^\dagger_q + a^\dagger_q a_p = \delta_{pq}
+=\begin{cases}
+    1  &  \text{si $p = q$} \\
+    0  &  \text{sinon}
+\end{cases}, \\
 & \{a_p, a_q\} = \{a^\dagger_p, a^\dagger_q\} = 0,
 \end{align}
-où $\delta_{pq}$ est le symbole de Kronecker (égal à 1 si $p = q$ et 0 sinon).
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|l|l|}
+\toprule
+\textbf{Opérateur} & \textbf{Action} & \textbf{Relation} \\
+\midrule
+$a^\dagger_i$ & Crée un électron dans l'orbitale $i$ & $a_i\ket{f_i}= \delta_{f_i, 0}\ket{ f_i \oplus 1}$ \\
+$a_i$ & Annihile un électron dans l'orbitale $i$ & $a_i\ket{f_i}= \delta_{f_i, 1}\ket{ f_i \oplus 1}$ \\
+$n_i = a^\dagger_i a_i$ & Compte l'occupation de l'orbitale $i$ & $n_i \ket{f} = f_i \ket{f}$ \\
+\bottomrule
+\end{tabular}
+\caption{Propriétés des opérateurs fermioniques}
+\label{tab:fermion_operators}
+\end{table}
 
 La nature fermionique des électrons implique que les fonctions d'état composées de plusieurs électrons doivent être antisymétriques lorsqu'il s'agit d'échanger deux particules. Cela se traduit par la manière dont les opérateurs de création et d'annihilation agissent sur les déterminants $\ket{f}$ :
 \begin{align}\label{eq:fermion_operators}
