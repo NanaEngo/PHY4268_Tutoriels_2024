@@ -213,7 +213,6 @@ Nous supposons que l'état Hartree-Fock pour ce système est \textbf{a les deux 
 Les opérateurs fermioniques, en particulier les opérateurs de création ($a^\dagger$) et d'annihilation ($a$), sont des outils mathématiques essentiels pour décrire les systèmes de fermions dans le cadre de la seconde quantification. Ces opérateurs permettent de manipuler les états quantiques en ajoutant ou en supprimant des particules, tout en respectant l'antisymétrie, qui est une caractéristique fondamentale des fermions. Dans cette section, nous allons définir ces opérateurs et examiner leurs propriétés fondamentales.
 
 Les opérateurs fermioniques $a^\dagger_i$ et $a_i$ obéissent aux relations d'anticommutation fermioniques suivantes :
-Les opérateurs fermioniques $a^\dagger_i$ et $a_i$ obéissent aux relations d'anticommutation fermioniques suivantes :
 \begin{align}\label{eq:anticommutation}
 & \{a_p, a^\dagger_q\} = a_p a^\dagger_q + a^\dagger_q a_p = \delta_{pq}
 =\begin{cases}
@@ -272,6 +271,14 @@ En utilisant également de tels opérateurs, nous pouvons exprimer :
 \label{eq:example_expression}
 \ket{0} \ket{1} \ket{1} \ket{0} = a^\dagger_1 a^\dagger_2 \ket{0}^{\otimes 4}.
 \end{equation}
+
+\begin{example}{Application pratique}{}
+Pour un système à 2 orbitales :
+\begin{align*}
+a^\dagger_1 a_2 \ket{01} &= a^\dagger_1 \ket{00} = \ket{10} \\
+a^\dagger_1 a_2 \ket{10} &= 0 \quad (\text{principe d'exclusion de Pauli})
+\end{align*}
+\end{example}
 
 L'opérateur d'occupation orbitale est donné par :
 \begin{align}
