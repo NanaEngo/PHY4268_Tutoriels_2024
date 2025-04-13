@@ -501,12 +501,11 @@ Cette transformation encode la parité cumulative des occupations orbitales :
 &\mathtt{P}_k^\pm =Q^\pm_k \otimes \op{0}_{k-1} - Q^\mp_k \otimes \op{1}_{k-1} .
 \end{align}
 
-Afin de définir les transformations entre les bases, nous considérerons en termes de correspondance entre chaînes de bits. Pour
-toutes les transformations que nous considérons, qui ne font intervenir que des sommes de bits $\mod 2$, il est possible de représenter leur action par matrices agissant sur le vecteur de valeurs binaires correspondant à un état de base logique donné. La correspondance à la base de parité est donnée par :
+Pour établir la correspondance à la base de parité on utilise 
 \begin{equation}
      p_k = \sum_j [ \pi_n]_{kj}\ f_j,
 \end{equation}
-où $n$ est le nombre d'orbitales. $\pi_n$ représente la matrice $(n\times n)$ suivante
+où $n$ est le nombre d'orbitales, et $\pi_n$ la matrice $(n\times n)$ suivante
 \begin{align}
  & [\pi_n]_{kj} =  
   \begin{cases}
@@ -521,7 +520,7 @@ où $n$ est le nombre d'orbitales. $\pi_n$ représente la matrice $(n\times n)$ 
   0 & 0 & \cdots & 1
  \end{pmatrix}
 \end{align}
-Il est important de souligner que nous indexons la matrice $\pi_n$ à partir du coin inférieur droit, afin de garantir la cohérence avec notre schéma de numérotation orbitale. 
+Il est important de souligner qu'on indexe la matrice $\pi_n$ à partir du coin inférieur droit, afin de garantir la cohérence avec notre schéma de numérotation orbitale. 
 
 Par exemple, pour changer l'état de base du numéro d'occupation $|1 0 1 0 0 1 1 1\rangle$ en son état de base de parité correspondant $|1 0 0 1 1 1 0 1\rangle$, nous appliquons la matrice $\pi_8$ sur la chaîne de bits appropriée :
 \begin{equation}
@@ -577,6 +576,14 @@ a^\dagger_0 ,\quad a^\dagger_1 ,\quad a^\dagger_2 ,\quad a^\dagger_3 &
 n_k = a^\dagger_k a_k & \op{1}_{k=0}=\frac12(\mathbb{I} - \mathtt{Z}_0) ,\quad  \frac12(\mathbb{I} - \mathtt{Z}_k\mathtt{Z}_{k-1})_{k=1,2,3}\\\hline
 \end{array}
 $$
+
+\begin{remark}{Avantages de la transformation de parité}{}
+\begin{itemize}
+\item Réduction des corrélations à longue portée
+\item Préservation naturelle du nombre d'électrons
+\item Efficace pour les systèmes à symétrie de particule-trou
+\end{itemize}
+\end{remark}
 
 
 \subsection{Transformation de Bravyi-Kitaev (BKT)}
