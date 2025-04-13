@@ -383,32 +383,23 @@ Le choix du mapping dépend de :
 \end{itemize}
 \end{remark}
 
-\subsection{Stratégies de mapping fermion-qubit}
-\label{subsec:mapping_strategies}
-
-Pour simuler des systèmes moléculaires sur calculateur quantique, une transformation cruciale consiste à mapper les opérateurs fermioniques sur des opérateurs qubit. Trois méthodes principales sont utilisées :
-
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.9\textwidth]{mapping_strategies.pdf}
-    \caption{Comparaison des différentes stratégies de mapping. Chaque approche présente des avantages spécifiques selon la topologie du problème.}
+    \caption{Comparaison des différentes stratégies de mapping. Chaque approche présente des avantages spécifiques selon la topologie du problème. \textbf{Jordan-Wigner} : Représentation schématique des qubits en chaîne linéaire ; Opérateur typique avec chaîne de Pauli-Z; Avantages/inconvénients dans un encadré. \textbf{Parité} : Structure en échelle pour l'encodage de parité; Opérateur avec portée réduite. \textbf{Bravyi-Kitaev} : Représentation arborescente; Opérateur local avec dépendance hiérarchique; Analyse des performances relatives. Tableau comparatif en bas : Métriques clés comparant les différentes méthodes; Données typiques pour une molécule de \ch{H2}; Tableau comparatif des propriétés.}
     \label{fig:mapping_strategies}
 \end{figure}
 
-
-En simulation quantique, encoder un problème de structure électronique en seconde quantification sur un calculateur quantique implique d'établir une correspondance entre les opérateurs d'échelle fermioniques et les opérateurs de Pauli. Les transformations de Jordan-Wigner (JWT), de Parité (PT) et de Bravyi-Kitaev (BKT) sont parmi les plus couramment utilisées en calculs quantiques. 
 \subsubsection{Décomposition de Pauli}
 
-Les matrices de Pauli constituent un ensemble de matrices qui sont à la fois Hermitiennes et unitaires, formant ainsi une base complète pour l'espace des opérateurs agissant sur un qubit. Cela signifie que tout opérateur agissant sur un qubit peut être exprimé comme une combinaison linéaire des matrices de Pauli. Cette propriété est essentielle pour la simulation quantique, car elle permet de décomposer l'Hamiltonien électronique en termes d'opérateurs simples qui peuvent être implémentés sur les qubits.
-
-Comme $\{\mathbb{I}, \mathtt{X}, \mathtt{Y}, \mathtt{Z}\}$,
+Les opérateurs de Pauli $\{\mathbb{I}, \mathtt{X}, \mathtt{Y}, \mathtt{Z}\}$ 
 \begin{align}\label{eq:pauli_matrices}
 & \mathbb{I} := \op{0} + \op{1},
 && \mathtt{X} := \ket{0}\bra{1} + \ket{1}\bra{0}, 
 && i \mathtt{Y} := \ket{0}\bra{1} - \ket{1}\bra{0}, 
 & \mathtt{Z} := \op{0} - \op{1}.
 \end{align}
- forme une base complète pour tout opérateur Hermitien 1- ou multi-qubit, l'ingrédient clé des algorithmes variationnels est de décomposer l'Hamiltonien électronique en termes de produits des matrices de Pauli :
+constituent un ensemble d'opérateurs, qui sont à la fois Hermitiens et unitaires, formant ainsi une base complète pour l'espace des opérateurs agissant sur un qubit. Cela signifie que \textbf{tout opérateur agissant sur un qubit peut être exprimé comme une combinaison linéaire des matrices de Pauli}. Cette propriété est essentielle pour la simulation quantique, car elle permet de décomposer l'Hamiltonien électronique en termes de produits des opérateurs de Pauli :
 \begin{equation}\label{eq:pauli_decomposition}
 \mathtt{P}_j = \mathtt{X}_{M-1}^j \otimes \mathtt{X}_{M-2}^j \otimes \mathtt{X}_k^j \otimes \dots \otimes \mathtt{X}_0^j = \bigotimes_{i=0}^{M-1} \mathtt{X}_i^j,
 \end{equation}
@@ -424,8 +415,6 @@ où les opérateurs de Pauli $\mathtt{X}^j \in \{\mathbb{I}, \mathtt{X}, \mathtt
 \end{cases}
 \end{aligned}
 \end{equation}
-Les opérateurs de Pauli sont à la fois unitaires et Hermitiens. 
-
 L'Hamiltonien total peut alors être représenté comme la combinaison linéaire de $\mathtt{P}_j$ :
 \begin{align}\label{eq:hamiltonian_pauli}
 & \mathtt{H} = \sum_{j=1}^{N_k} w_j \mathtt{P}_j = \sum_{j=1}^{N_k} w_j \left( \bigotimes_{i=0}^{M-1} \mathtt{X}_i^j \right), \\
