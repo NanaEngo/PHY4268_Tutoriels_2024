@@ -300,7 +300,6 @@ L'Hamiltonien électronique en seconde quantification s'exprime comme :
 \begin{equation}\label{eq:H_elec}
 \mathtt{H}_{\rm elec} = \underbrace{\sum_{pq} h_{pq} a^\dagger_p a_q}_{\text{Termes à 1 électron}} + \frac12 \underbrace{\sum_{pqrs} h_{pqrs} a^\dagger_p a^\dagger_q a_r a_s}_{\text{Termes à 2 électrons}}
 \end{equation}
-
 où :
 \begin{itemize}
     \item $a^{\dagger}_p$ est l'\textbf{opérateur de création} d'un électron dans le spin-orbite $p$. Cet opérateur ajoute un électron à l'orbitale de spin $p$;
@@ -309,7 +308,7 @@ où :
     \item $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décrivent l'interaction coulombienne entre les électrons.
 \end{itemize}
 
-Les intégrales pour un électron sont exprimées comme suit :
+Les intégrales $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction Coulombienne avec le potentiel créé par les noyaux atomiques. Elles se calculent comme :
 \begin{equation}\label{eq:h_pq}
 h_{pq} = \int \phi^*_p(\mathbf{r}) \left( -\frac12 \nabla^2 - \sum_{I} \frac{Z_I}{|\mathbf{r}-\mathbf{R}_I|} \right)   \phi_q(\mathbf{r})d\mathbf{r},
 \end{equation}
@@ -319,32 +318,17 @@ où :
     \item $Z_I$ est la charge du noyau $I$;
     \item $\mathbf{R}_I$ est la position du noyau $I$.
 \end{itemize}
-Ces intégrales décrivent l'énergie cinétique des électrons individuels, ainsi que leurs interactions Coulombiennes avec les champs électriques générés par le noyau.
 
-Les intégrales à deux électrons sont données par :
+Les intégrales $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décriventles interactions Coulombiennes entre les électrons. Elles se calculent comme :
 \begin{equation}\label{eq:h_pqrs}
 h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mathbf{r}_2)  \phi_s(\mathbf{r}_1)}
 {|\mathbf{r}_1-\mathbf{r}_2|}d\mathbf{r}_1d\mathbf{r}_2,
 \end{equation}
-où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. Ces intégrales décrivent les interactions Coulombiennes entre les électrons.
+où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. 
 
 Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
 
-\paragraph*{Exemple : Molécule de \ch{H2} dans une base minimale}
-Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
-\begin{itemize}
-    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\Rightarrow h_{01}=h_{10}$).
-    \item Termes à 2 électrons : Seulement $h_{0011}$ contribue significativement.
-    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
-\end{itemize}
-
-\subsection*{\faExclamationTriangle~ Attention aux pièges !}
-\begin{itemize}
-    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
-    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
-\end{itemize}
-
-Le \autoref{tab:integrales} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
+Le \autoref{tab:integrales} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification. La \autoref{fig:Integrales_fermionique} permet de visualiser l'Hamiltonien en seconde quantification.
 
 \begin{table}[h]
     \centering
@@ -364,6 +348,22 @@ Le \autoref{tab:integrales} résume les correspondances entre les éléments du 
     \caption{\textbf{Visualisation de l'Hamiltonien en seconde quantification.} (a) Termes à 1 électron : Mouvement d'un électron entre orbitales. (b) Termes à 2 électrons : Interaction Coulombienne entre paires d'électrons.}
     \label{fig:Integrales_fermioniques}
 \end{figure}
+
+
+\paragraph*{Exemple : Molécule de \ch{H2} dans une base minimale}
+Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
+\begin{itemize}
+    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\TO h_{01}=h_{10}$).
+    \item Termes à 2 électrons : Seulement $h_{0011}$ contribue significativement.
+    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
+\end{itemize}
+
+\subsection*{\faExclamationTriangle~ Attention aux pièges !}
+\begin{itemize}
+    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
+    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
+\end{itemize}
+
 
 \begin{example}{Exercice rapide}{}
 Pour 2 orbitales $\phi_0$, $\phi_1$ :
