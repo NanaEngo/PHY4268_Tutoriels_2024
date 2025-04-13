@@ -24,11 +24,27 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 % % Remarque avec caption et label=rq:
 \newtcbtheorem[number within=section]{remark}{Remarque}
 {fonttitle=\bfseries\upshape,fontupper=\slshape, arc=0mm, colback=yellow!3,colframe=yellow!35!black,separator sign dash,breakable,beamer}{rq}
-
+%
+\newtcolorbox{marker}[1][]{enhanced,
+  before skip balanced=2mm,after skip balanced=3mm,
+  boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+  colback=yellow!50,
+  colframe=yellow!20!black,
+  sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+  underlay={%
+    \path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[fill=yellow!50!black,draw=none] (interior.south west) rectangle node[white]{\Huge\bfseries !} ([xshift=4mm]interior.north west);
+    },
+  drop fuzzy shadow,#1}
+ %
+\usepackage{fontawesome5}       % Icônes Font Awesome 5
+\usepackage{enumitem}           % Personnalisation des listes
+%
 \usepackage{float} % Gère le placement des objets flottants
 \floatplacement{figure}{H} % Forces les figures à être placées exactement à l'endroit où elles apparaissent dans le texte
 
-\usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
+%\usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
 \usepackage{array, multicol, wrapfig, lmodern, multirow, booktabs, chemformula} % Diverses améliorations de mise en forme
 \usepackage[detect-all=true, group-minimum-digits=4]{siunitx} % Pour les unités SI
 
@@ -54,7 +70,8 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
  bookmarksopen=true % Ouvre les signets PDF par défaut
 }
 
-\usepackage{cleveref} % Améliore la gestion des références croisées
+%\usepackage{cleveref} % Améliore la gestion des références croisées
+%\usepackage[capitalize,french]{cleveref} % Références intelligentes en français
 
 \frenchbsetup{StandardLayout=true} % Configuration du layout français
 \numberwithin{equation}{section} % Numérotation des équations par section
@@ -89,22 +106,54 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 \newpage
 
 \section*{Introduction}
+%\vspace{0.5cm}
 
-Après avoir établi les bases théoriques de la correspondance fermion-qubit dans le Chapitre 2, nous abordons maintenant la phase concrète de la simulation quantique. Ce chapitre vous guide, à travers des étapes clés, dans la transformation d'un problème de chimie quantique en un circuit quantique exécutable, en exploitant les outils modernes de calcul quantique. Essentiellement, il s'agit de l'étape qui établit une correspondance entre les opérateurs fermioniques (Hamiltonien en seconde quantification) et les opérateurs qubits (Hamiltonien Qubit). Nous abordons les concepts fondamentaux tels que la génération des intégrales moléculaires, la représentation par nombre d'occupation, ainsi que les mappings fermion-qubit, notamment les transformations de Jordan-Wigner, de parité et de Bravyi-Kitaev (voir la \Cref{fig:VQE_flowchart}.
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!70,title=Contexte pédagogique,beamer]
+Ce chapitre s'inscrit dans la séquence d'apprentissage suivante :
+\begin{itemize}
+    \item\textbf{Cours magistral} - Fondements théoriques des correspondances fermion-qubit;
+    \item\textbf{Atelier} - Implémentation sur simulateur quantique (Qiskit).
+\end{itemize}
+\end{tcolorbox}
+
+Après avoir établi les bases théoriques de la génération des intégrales moléculaires (théorie Hartree-Fock)
+aux Chapitres 1 et 2, le présent Chapitre aborde le principe de l'encodage d'un problème de structure électronique en seconde quantification sur un calculateur quantique. Il s'agit d'établir une correspondance entre les opérateurs d'échelle fermioniques (Hamiltonien en seconde quantification ou Hamiltonien fermionique) et les opérateurs de Pauli (Hamiltonien Qubit), à travers les transformations de Jordan-Wigner (JWT), de parité (PT) ou de Bravyi-Kitaev (BKT) (voir les parties marquées en rouge sur la \autoref{fig:VQE_flowchart} présentant la VQE).
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{VQE_Flowchart_Tuto2.jpeg}
-    \caption{\textit{Schéma illustrant le flux de travail du Variational Quantum Eigensolver (VQE). Les parties rouges indiquent les étapes clés liées à la transformation des Hamiltoniens.}}
+    \caption{\textit{Flux de travail du Variational Quantum Eigensolver (VQE).. Les parties rouges indiquent les étapes clés liées à la transformation des Hamiltoniens.}}
     \label{fig:VQE_flowchart}
 \end{figure}
 
-À la fin de ce chapitre, l'apprenant sera capable :
-\begin{itemize}
-    \item de comprendre le principe d'encodage d'un problème électronique en seconde quantification sur un calculateur quantique ;
-    \item de transformer un Hamiltonien moléculaire en première quantification en un Hamiltonien fermionique ;
-    \item de convertir un Hamiltonien fermionique en un Hamiltonien Qubit.
+\noindent\textbf{Pourquoi cette étape est essentielle ?} \\
+La conversion fidèle des Hamiltoniens moléculaires en opérateurs qubits constitue le \textit{pont quantique} entre chimie quantique théorique et calcul quantique. Une erreur à cette étape rendrait toute simulation ultérieure inutile, d'où l'importance d'en maîtriser chaque subtilité.
+
+\subsection*{Structure pédagogique du chapitre}
+\begin{itemize}[leftmargin=*,nosep]
+%    \item[\textcolor{blue}{\faArrowCircleRight}] Partie 1 : Génération des intégrales moléculaires (théorie Hartree-Fock);
+    \item[\textcolor{blue}{\faArrowCircleRight}] Partie 1 : Transformation en opérateurs fermioniques (2e quantification);
+    \item[\textcolor{blue}{\faArrowCircleRight}] Partie 2 : Mappings qubit (Jordan-Wigner/Parité/Bravyi-Kitaev).
 \end{itemize}
+
+\subsection*{Objectifs d'apprentissage} 
+À la fin de ce chapitre, vous serez capable de :
+\begin{itemize}[leftmargin=*]
+%    \item[\textcolor{green}{\faCheck}] Appliquer la méthode Hartree-Fock pour obtenir les intégrales moléculaires d'une molécule simple;
+    \item[\textcolor{green}{\faCheck}] Construire un Hamiltonien fermionique en 2e quantification à partir de ces intégrales;
+    \item[\textcolor{green}{\faCheck}] Choisir et implémenter un mapping fermion-qubit adapté au matériel quantique cible;
+    \item[\textcolor{green}{\faCheck}] Valider votre implémentation par des tests de cohérence dimensionnelle.
+\end{itemize}
+
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!70,title={À vos simulateurs !},beamer]
+Les compétences acquises ici seront directement mises en œuvre lors des ateliers pratiques où vous :
+\begin{itemize}
+    \item Programmerez ces transformations en Python (bibliothèque Qiskit)
+    \item Comparerez expérimentalement les différents mappings 
+    \item Mesurerez l'impact des approximations sur la précision des résultats
+\end{itemize}
+\end{tcolorbox}
+
 
 \section{Hamiltonien moléculaire fermionique}
 
@@ -147,27 +196,64 @@ où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. Ces
 
 Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
 
-\subsection{Orbitales moléculaires et orbitales de spin} 
+\paragraph*{Exemple : Molécule de H₂ dans une base minimale}
+Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
+\begin{itemize}
+    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\Rightarrow h_{01}=h_{10}$).
+    \item Termes à 2 électrons : Seulement $h_{0011}$ contribue significativement.
+    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
+\end{itemize}
 
-Les orbitales moléculaires ($\phi_u$) peuvent être classées en deux catégories : occupées et virtuelles (inoccupées). Une orbitale moléculaire (OM) peut contenir au maximum deux électrons. Ces électrons doivent avoir des spins opposés, conformément au principe d'exclusion de Pauli. Ces orbitales moléculaires résultent de la méthode de Hartree-Fock (HF), qui suppose que chaque électron est soumis au champ moyen créé par tous les autres électrons.
+\subsection*{\faExclamationTriangle~ Attention aux pièges !}
+\begin{itemize}
+    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
+    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
+\end{itemize}
 
-Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron, ce qui correspond à l'une des deux orientations de spin, ou être inoccupées.
 
-Le \autoref{tab:Quant12} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
-
-\begin{table}[htpb]
-\begin{tabular}{|l|l|l|}\toprule
-\textbf{Approximation BO}  &  \textbf{En 2e quantification} &  \textbf{Description} \\ \hline
-$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \midrule
-$-\sum_{i,I}\frac{Z_I}{|\mathbf{r}_i-\mathbf{R}_I|}$ &
-$-\sum_{p,q} \langle p|\frac{Z_I}{|\mathbf{r}_p-\mathbf{R}_I|}|q\rangle a^\dagger_p a_q$ & $\mathtt{U}_{en}$ (interaction noyau-électron) \\ \hline
-$\sum_{i,j>i}\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}$ & 
-$\sum_{p,q,r,s}\langle pq \big|\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}\big|rs\rangle a^\dagger_p a^\dagger_q a_r a_s$ & 
-$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \bottomrule
-\end{tabular}
-\caption{Correspondance Première et Seconde Quantification.}
-\label{tab:Quant12}
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \hline
+    \textbf{Intégrale} & \textbf{Expression} & \textbf{Rôle physique} \\ \hline
+    $h_{pq}$ & Éq.~\ref{eq:h_pq} & Énergie cinétique + Attraction noyau-électron \\ \hline
+    $h_{pqrs}$ & Éq.~\ref{eq:h_pqrs} & Répulsion électron-électron entre paires \\ \hline
+    \end{tabular}
+    \caption{\textbf{Récapitulatif des intégrales moléculaires} \\ Les deux types d'intégrales et leur signification physique.}
+    \label{tab:integrales}
 \end{table}
+
+\begin{example}{\faPencilSquareO~ Exercice rapide}{}
+Pour 2 orbitales $\phi_0$, $\phi_1$ :
+\begin{enumerate}
+    \item Écrire le terme d'interaction $a_0^\dagger a_1^\dagger a_1 a_0$ en notation normale (avec $n_p = a_p^\dagger a_p$).
+    \item Quel est le rôle physique de ce terme ? (Indice : Pensez à la répulsion entre électrons.)
+\end{enumerate}
+\tcblower
+\footnotesize\textit{Réponse :} $n_0 n_1$ décrit la répulsion entre électrons dans les orbitales 0 et 1.
+\end{example}
+
+%\subsection{Orbitales moléculaires et orbitales de spin} 
+%
+%Les orbitales moléculaires ($\phi_u$) peuvent être classées en deux catégories : occupées et virtuelles (inoccupées). Une orbitale moléculaire (OM) peut contenir au maximum deux électrons. Ces électrons doivent avoir des spins opposés, conformément au principe d'exclusion de Pauli. Ces orbitales moléculaires résultent de la méthode de Hartree-Fock (HF), qui suppose que chaque électron est soumis au champ moyen créé par tous les autres électrons.
+%
+%Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron, ce qui correspond à l'une des deux orientations de spin, ou être inoccupées.
+%
+%Le \autoref{tab:Quant12} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
+%
+%\begin{table}[htpb]
+%\begin{tabular}{|l|l|l|}\toprule
+%\textbf{Approximation BO}  &  \textbf{En 2e quantification} &  \textbf{Description} \\ \hline
+%$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \midrule
+%$-\sum_{i,I}\frac{Z_I}{|\mathbf{r}_i-\mathbf{R}_I|}$ &
+%$-\sum_{p,q} \langle p|\frac{Z_I}{|\mathbf{r}_p-\mathbf{R}_I|}|q\rangle a^\dagger_p a_q$ & $\mathtt{U}_{en}$ (interaction noyau-électron) \\ \hline
+%$\sum_{i,j>i}\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}$ & 
+%$\sum_{p,q,r,s}\langle pq \big|\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}\big|rs\rangle a^\dagger_p a^\dagger_q a_r a_s$ & 
+%$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \bottomrule
+%\end{tabular}
+%\caption{Correspondance Première et Seconde Quantification.}
+%\label{tab:Quant12}
+%\end{table}
 
 Un des avantages importants du formalisme de seconde quantification est que la propriété d'anti-symétrie des fonctions d'état pour l'échange de fermions identiques, qui est prise en compte manuellement dans une approche de première quantification à travers les déterminants de Slater, est automatiquement imposée par les relations d'anti-commutation des opérateurs de création et d'annihilation. Cependant, le prix à payer est que l'on travaille avec un nombre non fixe de particules, qui demeure cependant une quantité conservée.
 
