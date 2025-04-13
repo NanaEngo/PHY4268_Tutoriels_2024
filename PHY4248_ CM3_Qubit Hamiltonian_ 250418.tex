@@ -300,13 +300,13 @@ L'Hamiltonien électronique en seconde quantification s'exprime comme :
 \begin{equation}\label{eq:H_elec}
 \mathtt{H}_{\rm elec} = \underbrace{\sum_{pq} h_{pq} a^\dagger_p a_q}_{\text{Termes à 1 électron}} + \frac12 \underbrace{\sum_{pqrs} h_{pqrs} a^\dagger_p a^\dagger_q a_r a_s}_{\text{Termes à 2 électrons}}
 \end{equation}
-où :
-\begin{itemize}
-    \item $a^{\dagger}_p$ est l'\textbf{opérateur de création} d'un électron dans le spin-orbite $p$. Cet opérateur ajoute un électron à l'orbitale de spin $p$;
-    \item $a_q$ est l'\textbf{opérateur d'annihilation} d'un électron dans le spin-orbite $q$. Cet opérateur supprime un électron de l'orbitale de spin $q$;
-    \item $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction avec le potentiel créé par les noyaux atomiques;
-    \item $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décrivent l'interaction coulombienne entre les électrons.
-\end{itemize}
+L'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}: il excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$. La \autoref{fig:Integrales_fermioniques} permet de visualiser l'Hamiltonien en seconde quantification.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.7\linewidth]{Integrales_fermioniques.pdf}
+    \caption{\textbf{Visualisation de l'Hamiltonien en seconde quantification.} (a) Termes à 1 électron : Mouvement d'un électron entre orbitales. (b) Termes à 2 électrons : Interaction Coulombienne entre paires d'électrons.}
+    \label{fig:Integrales_fermioniques}
+\end{figure}
 
 Les intégrales $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction Coulombienne avec le potentiel créé par les noyaux atomiques. Elles se calculent comme :
 \begin{equation}\label{eq:h_pq}
@@ -326,9 +326,7 @@ h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mat
 \end{equation}
 où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. 
 
-Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
-
-Le \autoref{tab:integrales} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification. La \autoref{fig:Integrales_fermionique} permet de visualiser l'Hamiltonien en seconde quantification.
+Le \autoref{tab:integrales} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
 
 \begin{table}[h]
     \centering
@@ -342,23 +340,16 @@ Le \autoref{tab:integrales} résume les correspondances entre les éléments du 
     \label{tab:integrales}
 \end{table}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=.7\linewidth]{Integrales_fermioniques.pdf}
-    \caption{\textbf{Visualisation de l'Hamiltonien en seconde quantification.} (a) Termes à 1 électron : Mouvement d'un électron entre orbitales. (b) Termes à 2 électrons : Interaction Coulombienne entre paires d'électrons.}
-    \label{fig:Integrales_fermioniques}
-\end{figure}
-
 \subsection*{\faExclamationTriangle~ Attention aux pièges !}
 \begin{itemize}
-    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
-    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
+    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la \textit{convention Physicist} : $\langle pq|rs\rangle$ (pas de permutation automatique).
+    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est essentiel : intervertir $a_r$ et $a_s$ introduit un signe $-$.
 \end{itemize}
 
 \begin{example}{Molécule de \ch{H2} dans une base minimale}{}
 Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
 \begin{itemize}
-    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\TO h_{01}=h_{10}$).
+    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $h_{01}=h_{10}$).
     \item Termes à 2 électrons : Seule $h_{0011}$ contribue significativement.
     \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
 \end{itemize}
@@ -385,7 +376,21 @@ Un des avantages importants du formalisme de seconde quantification est que la p
 
 \section{Hamiltonien Qubit}
 
-Pour simuler des systèmes quantiques sur des ordinateurs quantiques, il est nécessaire de transformer les opérateurs fermioniques, qui décrivent les électrons dans les molécules, en opérateurs qubit, qui peuvent être implémentés sur les qubits des ordinateurs quantiques. Cette transformation est connue sous le nom de "mapping fermion-qubit". Dans cette section, nous allons explorer les principales méthodes de mapping fermion-qubit, telles que les transformations de Jordan-Wigner, de parité et de Bravyi-Kitaev.
+Pour simuler des systèmes quantiques sur des calculateurs quantiques, il est nécessaire de transformer les opérateurs fermioniques, qui décrivent les électrons dans les molécules, en opérateurs qubit, qui peuvent être implémentés sur les qubits des calculateurs quantiques. Cette transformation est connue sous le nom de "mapping fermion-qubit". Dans cette section, nous allons explorer les principales méthodes de mapping fermion-qubit, telles que les transformations de
+\begin{itemize}
+\item Jordan-Wigner : simple mais peu efficace; 
+\item Bravyi-Kitaev : efficace pour les systèmes corrélés ;
+\item Parité : optimisée pour les systèmes à symétrie particulière.
+\end{itemize}
+
+\begin{remark}{Choix du mapping}{}
+Le choix du mapping impacte directement :
+\begin{itemize}
+\item Le nombre de termes Pauli générés
+\item La profondeur des circuits quantiques
+\item La précision numérique des résultats
+\end{itemize}
+\end{remark}
 
 \subsection{Correspondance (mapping) fermion-qubit}
 
