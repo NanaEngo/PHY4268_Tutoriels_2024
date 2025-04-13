@@ -40,7 +40,7 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 
 \usepackage{fancyvrb} % Remplacement du mode verbatim qui permet une meilleure mise en forme
 %\usepackage[Export]{adjustbox} % Utilisé pour contraindre les images à une taille maximale
-%\adjustboxset{max size={0.9\linewidth}{0.9\paperheight}} % Taille maximale des images
+%a^\daggerjustboxset{max size={0.9\linewidth}{0.9\paperheight}} % Taille maximale des images
 
 % Configuration pour hyperref
 \usepackage{hyperref} 
@@ -68,7 +68,7 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 \newcommand{\tcr}[1]{\textcolor{red}{#1}} % textcolor{red}{#1}
 % Titre du document
 \title{\vspace*{4cm}
-\Huge\tcb{Chapter 3 - Hamiltonien Qubit}
+\Huge\tcb{Chapter 3 - Implémentation quantique des Hamiltoniens moléculaires}
 \vspace*{5cm}}
 
 \author{
@@ -85,9 +85,19 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 \date{\vspace*{3cm}April 2025} % Date du document
 
 \begin{document}
+\maketitle
+\newpage
+
 \section*{Introduction}
 
-Ce chapitre a pour objectif de présenter les bases théoriques nécessaires pour établir une correspondance entre les opérateurs fermioniques (Hamiltonien en seconde quantification) et les opérateurs qubits (Hamiltonien Qubit). Cette transformation est essentielle pour la simulation quantique des systèmes moléculaires sur des calculateurs quantiques. Nous abordons les concepts fondamentaux tels que la génération des intégrales moléculaires, la représentation nombre d'occupation, ainsi que les mappings fermion-qubit comme les transformations de Jordan-Wigner, de parité et de Bravyi-Kitaev.
+Après avoir établi les bases théoriques de la correspondance fermion-qubit dans le Chapitre 2, nous abordons maintenant la phase concrète de la simulation quantique. Ce chapitre vous guide, à travers des étapes clés, dans la transformation d'un problème de chimie quantique en un circuit quantique exécutable, en exploitant les outils modernes de calcul quantique. Essentiellement, il s'agit de l'étape qui établit une correspondance entre les opérateurs fermioniques (Hamiltonien en seconde quantification) et les opérateurs qubits (Hamiltonien Qubit). Nous abordons les concepts fondamentaux tels que la génération des intégrales moléculaires, la représentation par nombre d'occupation, ainsi que les mappings fermion-qubit, notamment les transformations de Jordan-Wigner, de parité et de Bravyi-Kitaev (voir la \Cref{fig:VQE_flowchart}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{VQE_Flowchart_Tuto2.jpeg}
+    \caption{\textit{Schéma illustrant le flux de travail du Variational Quantum Eigensolver (VQE). Les parties rouges indiquent les étapes clés liées à la transformation des Hamiltoniens.}}
+    \label{fig:VQE_flowchart}
+\end{figure}
 
 À la fin de ce chapitre, l'apprenant sera capable :
 \begin{itemize}
@@ -96,20 +106,13 @@ Ce chapitre a pour objectif de présenter les bases théoriques nécessaires pou
     \item de convertir un Hamiltonien fermionique en un Hamiltonien Qubit.
 \end{itemize}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\linewidth]{./Graphics/VQE_Flowchart_Tuto2.jpeg}
-    \caption{\textit{Schéma illustrant le flux de travail du Variational Quantum Eigensolver (VQE). Les parties rouges indiquent les étapes clés liées à la transformation des Hamiltoniens.}}
-    \label{fig:VQE_flowchart}
-\end{figure}
-
 \section{Hamiltonien moléculaire fermionique}
 
-Dans cette section, nous allons explorer comment l'Hamiltonien électronique d'une molécule peut être exprimé en utilisant le formalisme de la seconde quantification. Cette approche est particulièrement utile pour les calculs de chimie quantique, car elle simplifie la manipulation des opérateurs et permet de décrire les systèmes à plusieurs électrons de manière concise. Nous allons voir comment les intégrales moléculaires, qui sont des quantités fondamentales dans les calculs de structure électronique, sont générées et utilisées pour construire l'Hamiltonien.
+Dans cette section, nous allons explorer comment l'Hamiltonien électronique d'une molécule peut être exprimé en utilisant le formalisme de la seconde quantification. Cette approche est particulièrement utile pour les calculs en chimie quantique, car elle simplifie la manipulation des opérateurs et permet de décrire les systèmes à plusieurs électrons de manière concise. Nous allons voir comment les intégrales moléculaires, qui sont des quantités fondamentales dans les calculs de structure électronique, sont générées et utilisées pour construire l'Hamiltonien.
 
 \subsection{Génération des intégrales moléculaires}
 
-L'Hamiltonien électronique est exprimé dans la base des solutions de la méthode Hartree-Fock (HF), également appelées Orbitales Moléculaires (OM). Rappelons que la méthode HF est une méthode variationnelle qui permet d'approximer la fonction d'état électronique d'un système moléculaire en considérant que chaque électron se déplace dans un champ moyen créé par les autres électrons. Les orbitales moléculaires obtenues par cette méthode forment une base orthonormée qui peut être utilisée pour exprimer l'Hamiltonien électronique.
+L'Hamiltonien électronique est exprimé dans la base des solutions de la méthode Hartree-Fock (HF), également appelées Orbitales Moléculaires (OM). Rappelons que la méthode HF est une méthode variationnelle qui permet d'approximer la fonction d'état électronique d'un système moléculaire. Cette approximation est réalisée en considérant que chaque électron se déplace dans un champ moyen créé par les autres électrons. Les orbitales moléculaires obtenues par cette méthode forment une base orthonormée qui peut être utilisée pour exprimer l'Hamiltonien électronique.
 
 L'Hamiltonien s'écrit :
 \begin{equation}\label{eq:H_elec}
@@ -123,7 +126,7 @@ où :
     \item $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décrivent l'interaction coulombienne entre les électrons.
 \end{itemize}
 
-Les intégrales à un électron sont données par :
+Les intégrales pour un électron sont exprimées comme suit :
 \begin{equation}\label{eq:h_pq}
 h_{pq} = \int \phi^*_p(\mathbf{r}) \left( -\frac12 \nabla^2 - \sum_{I} \frac{Z_I}{|\mathbf{r}-\mathbf{R}_I|} \right)   \phi_q(\mathbf{r})d\mathbf{r},
 \end{equation}
@@ -133,45 +136,44 @@ où :
     \item $Z_I$ est la charge du noyau $I$;
     \item $\mathbf{R}_I$ est la position du noyau $I$.
 \end{itemize}
-Ces intégrales décrivent l’énergie cinétique des électrons individuels et leurs interactions Coulombiennes avec les champs électriques du noyau.
+Ces intégrales décrivent l'énergie cinétique des électrons individuels, ainsi que leurs interactions Coulombiennes avec les champs électriques générés par le noyau.
 
 Les intégrales à deux électrons sont données par :
 \begin{equation}\label{eq:h_pqrs}
-h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mathbf{r}_2)  \phi_s(\mathbf{r}_1)}{|\mathbf{r}_1-\mathbf{r}_2|}d\mathbf{r}_1d\mathbf{r}_2,
+h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mathbf{r}_2)  \phi_s(\mathbf{r}_1)}
+{|\mathbf{r}_1-\mathbf{r}_2|}d\mathbf{r}_1d\mathbf{r}_2,
 \end{equation}
 où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. Ces intégrales décrivent les interactions Coulombiennes entre les électrons.
 
-Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}, qui excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
-
-\bigskip
+Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
 
 \subsection{Orbitales moléculaires et orbitales de spin} 
 
-Les orbitales moléculaires ($\phi_u$) peuvent être occupées ou virtuelles (inoccupées). Un OM peut contenir au maximum deux électrons (avec des spins opposés) conformément au principe d'exclusion de Pauli. Ces OM sont les solutions de la méthode HF, où chaque électron est soumis au champ moyen créé par les autres électrons.
+Les orbitales moléculaires ($\phi_u$) peuvent être classées en deux catégories : occupées et virtuelles (inoccupées). Une orbitale moléculaire (OM) peut contenir au maximum deux électrons. Ces électrons doivent avoir des spins opposés, conformément au principe d'exclusion de Pauli. Ces orbitales moléculaires résultent de la méthode de Hartree-Fock (HF), qui suppose que chaque électron est soumis au champ moyen créé par tous les autres électrons.
 
-Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron ou être inoccupées.
+Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron, ce qui correspond à l'une des deux orientations de spin, ou être inoccupées.
 
-Le \Cref{tab:1_2_Quant} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et seconde quantification.
+Le \autoref{tab:Quant12} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
 
-\begin{table}
-\begin{tabular}{|l|l|l|}\hline
-\textbf{Approximation BO}  &  \textbf{Combinaison en 2e quantification} &  \textbf{Description} \\ \hline
-$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \hline
+\begin{table}[htpb]
+\begin{tabular}{|l|l|l|}\toprule
+\textbf{Approximation BO}  &  \textbf{En 2e quantification} &  \textbf{Description} \\ \hline
+$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \midrule
 $-\sum_{i,I}\frac{Z_I}{|\mathbf{r}_i-\mathbf{R}_I|}$ &
 $-\sum_{p,q} \langle p|\frac{Z_I}{|\mathbf{r}_p-\mathbf{R}_I|}|q\rangle a^\dagger_p a_q$ & $\mathtt{U}_{en}$ (interaction noyau-électron) \\ \hline
 $\sum_{i,j>i}\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}$ & 
 $\sum_{p,q,r,s}\langle pq \big|\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}\big|rs\rangle a^\dagger_p a^\dagger_q a_r a_s$ & 
-$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \hline
+$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \bottomrule
 \end{tabular}
-\caption{Correspondance Première et Seconde Quantification}
-\label{tab:1_2_Quant}
+\caption{Correspondance Première et Seconde Quantification.}
+\label{tab:Quant12}
 \end{table}
 
-Un des avantages importants apporté par le formalisme de seconde quantification est que la propriété d'anti-symétrie des fonctions d'état pour l'échange de fermions identiques, prise en compte manuellement dans une approche de première quantification en considérant les déterminants de Slater, est automatiquement imposée par les relations d'anti-commutation des opérateurs de création et d'annihilation. Cependant, le prix à payer est de travailler avec un nombre non fixe de particules, qui reste de toute façon une quantité conservée.
+Un des avantages importants du formalisme de seconde quantification est que la propriété d'anti-symétrie des fonctions d'état pour l'échange de fermions identiques, qui est prise en compte manuellement dans une approche de première quantification à travers les déterminants de Slater, est automatiquement imposée par les relations d'anti-commutation des opérateurs de création et d'annihilation. Cependant, le prix à payer est que l'on travaille avec un nombre non fixe de particules, qui demeure cependant une quantité conservée.
 
-\subsection{Répresentation nombre d'occupation}
+\subsection{Représentation nombre d'occupation}
 
-La représentation nombre d'occupation est une manière concise de décrire l'état d'un système de fermions (comme les électrons) en spécifiant le nombre de particules présentes dans chaque orbitale de spin. Au lieu de suivre chaque électron individuellement, on se concentre sur le nombre d'électrons dans chaque état possible. Cette représentation est particulièrement utile en seconde quantification, car elle permet de manipuler facilement les opérateurs de création et d'annihilation.
+La représentation du nombre d'occupation est une méthode concise pour décrire l'état d'un système de fermions, tels que les électrons, en spécifiant le nombre de particules présentes dans chaque orbitale de spin. Au lieu de suivre chaque électron individuellement, cette approche se concentre sur le nombre d'électrons dans chaque état quantique possible. Cette représentation est particulièrement utile en seconde quantification, car elle facilite la manipulation des opérateurs de création et d'annihilation.
 
 En seconde quantification, le déterminant de Slater est représenté par un \textbf{vecteur nombre d'occupation}:
 \begin{equation}\label{eq:occupation_vector}
@@ -184,8 +186,7 @@ où :
 \end{itemize}
 
 Le vecteur $\ket{f_i}$ est appelé \textbf{vecteur nombre d'occupation de l'orbitale fermionique i}, parce que :
-\begin{align}
-\label{eq:occupation_states}
+\begin{align}\label{eq:occupation_states}
 & \ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix} : \text{état vide}, \\
 & \ket{1} = \begin{pmatrix} 0 \\ 1 \end{pmatrix} : \text{état occupé}.
 \end{align}
@@ -194,26 +195,24 @@ Dans la deuxième représentation de quantification, au lieu de poser la questio
 
 \subsection{Opérateurs fermioniques}
 
-Les opérateurs fermioniques, en particulier les opérateurs de création ($a^\dagger$) et d'annihilation ($a$), sont des outils mathématiques essentiels pour décrire les systèmes de fermions en seconde quantification. Ils permettent de manipuler les états quantiques en ajoutant ou en supprimant des particules, tout en respectant l'antisymétrie requise par la nature fermionique des électrons. Dans cette section, nous allons définir ces opérateurs et examiner leurs propriétés fondamentales.
+Les opérateurs fermioniques, en particulier les opérateurs de création ($a^\dagger$) et d'annihilation ($a$), sont des outils mathématiques essentiels pour décrire les systèmes de fermions dans le cadre de la seconde quantification. Ces opérateurs permettent de manipuler les états quantiques en ajoutant ou en supprimant des particules, tout en respectant l'antisymétrie, qui est une caractéristique fondamentale des fermions, notamment des électrons. Dans cette section, nous allons définir ces opérateurs et examiner leurs propriétés fondamentales.
 
 Les opérateurs fermioniques $a^\dagger_i$ et $a_i$ obéissent aux relations d'anticommutation fermioniques suivantes :
-\begin{align}
-\label{eq:anticommutation}
+\begin{align}\label{eq:anticommutation}
 & \{a_p, a^\dagger_q\} = a_p a^\dagger_q + a^\dagger_q a_p = \delta_{pq}, \\
 & \{a_p, a_q\} = \{a^\dagger_p, a^\dagger_q\} = 0,
 \end{align}
 où $\delta_{pq}$ est le symbole de Kronecker (égal à 1 si $p = q$ et 0 sinon).
 
-La nature fermionique des électrons implique que les fonctions d'état à plusieurs électrons doivent être antisymétriques par rapport à l'échange de particules. Cela se reflète dans la manière dont les opérateurs de création et d'annihilation agissent sur les déterminants $\ket{f}$ :
-\begin{align}
-\label{eq:fermion_operators}
+La nature fermionique des électrons implique que les fonctions d'état composées de plusieurs électrons doivent être antisymétriques lorsqu'il s'agit d'échanger deux particules. Cela se traduit par la manière dont les opérateurs de création et d'annihilation agissent sur les déterminants $\ket{f}$ :
+\begin{align}\label{eq:fermion_operators}
 & a_i \ket{f_{M-1}, \dots, f_{i-1}, f_i, f_{i+1}, \dots, f_0} = \delta_{f_i, 1} (-1)^{\sum_{m < i} f_m} \ket{f_{M-1}, \dots, f_{i-1}, f_i \oplus 1, f_{i+1}, \dots, f_0}, \\
 & a^\dagger_i \ket{f_{M-1}, \dots, f_{i-1}, f_i, f_{i+1}, \dots, f_0} = \delta_{f_i, 0} (-1)^{\sum_{m < i} f_m} \ket{f_{M-1}, \dots, f_{i-1}, f_i \oplus 1, f_{i+1}, \dots, f_0}, \\
 & a \ket{0} = a^\dagger \ket{1} = 0.
 \end{align}
 où :
 \begin{itemize}
-    \item Le terme de phase $p_i = (-1)^{\sum_{m < i} f_m}$ désigne la parité qu'impose l'anti-symétrie d'échange des fermions.
+    \item Le terme \textit{phase} $p_i = (-1)^{\sum_{m < i} f_m}$ fait référence à la propriété de parité, qui découle de l'anti-symétrie observée lors de l'échange de fermions.
         \begin{itemize}
             \item $p_i = -1$ si le nombre d'électrons est impair dans les orbitales de spin d'indice inférieur à $i$.
             \item $p_i = 1$ si le nombre d'électrons est pair dans les orbitales de spin d'indice inférieur à $i$.
@@ -246,7 +245,7 @@ L'opérateur d'occupation orbitale est donné par :
 & n_i = a^\dagger_i a_i, \\
 & n_i \ket{f_{M-1}, \dots, f_i, \dots, f_0} = f_i \ket{f_{M-1}, \dots, f_i, \dots, f_0},
 \end{align}
-et il compte le nombre d'électrons dans une orbitale donnée, c'est-à-dire :
+et il compte le nombre d'électrons présents dans une orbitale spécifique, c'est-à-dire :
 \begin{align}
 \label{eq:occupation_number}
 & n_i \ket{0}_i = 0, \\
@@ -255,8 +254,7 @@ et il compte le nombre d'électrons dans une orbitale donnée, c'est-à-dire :
 
 \subsection{Exercise}
 
-\textbf{Enoncé :} \\
-Dans un \textbf{Exemple d'illustration} dy Cahpitre 1, nous avons considéré un système fictif décrit par des orbitales de spin $\ket{A_\uparrow}$, $\ket{A_\downarrow}$, $\ket{B_\uparrow}$, $\ket{B_\downarrow}$ étiquetées comme suit :
+Dans un \textbf{Exemple d'illustration} chapitre 1, nous avons considéré un système fictif décrit par des orbitales de spin $\ket{A_\uparrow}$, $\ket{A_\downarrow}$, $\ket{B_\uparrow}$, $\ket{B_\downarrow}$, étiquetées comme suit :
 \begin{align}
 \label{eq:spin_orbitals}
 & \ket{A_\uparrow} = \ket{00} = \ket{\mathbf{0}}, \\
@@ -264,7 +262,7 @@ Dans un \textbf{Exemple d'illustration} dy Cahpitre 1, nous avons considéré un
 & \ket{B_\uparrow} = \ket{10} = \ket{\mathbf{2}}, \\
 & \ket{B_\downarrow} = \ket{11} = \ket{\mathbf{3}}.
 \end{align}
-Nous supposons que l'état Hartree-Fock pour ce système \textbf{a les deux électrons occupant les orbitales $\ket{A}$}. Nous stockons les occupations des orbitales de spin $\ket{A_\uparrow}$, $\ket{A_\downarrow}$, $\ket{B_\uparrow}$, $\ket{B_\downarrow}$ que nous ordonnons comme $\ket{f_{B_\downarrow}, f_{B_\uparrow}, f_{A_\downarrow}, f_{A_\uparrow}}$, avec $f_i = 0, 1$ (dans l'espace de Fock fermionique).
+Nous supposons que l'état Hartree-Fock pour ce système est \textbf{a les deux électrons occupant les orbitales $\ket{A}$}. Nous stockons les occupations des orbitales de spin $\ket{A_\uparrow}$, $\ket{A_\downarrow}$, $\ket{B_\uparrow}$, $\ket{B_\downarrow}$ que nous ordonnons comme $\ket{f_{B_\downarrow}, f_{B_\uparrow}, f_{A_\downarrow}, f_{A_\uparrow}}$, avec $f_i = 0, 1$ (dans l'espace de Fock fermionique).
 
 \begin{enumerate}
     \item Écrivez, dans l'espace de Fock fermionique, l'état Hartree-Fock $\ket{\Psi_{\rm HF}}$, c'est-à-dire la correspondance du déterminant de Slater antisymétrisé obtenu dans l'\textbf{Exemple d'illustration}.
@@ -285,24 +283,17 @@ Pour simuler des systèmes quantiques sur des ordinateurs quantiques, il est né
 
 \subsection{Correspondance (mapping) fermion-qubit}
 
-En simulation quantique, encoder un problème de structure électronique en seconde quantification sur un calculateur quantique revient à établir une correspondance entre les opérateurs d'échelle fermioniques et les opérateurs de Pauli. Les transformations de Jordan-Wigner (JWT), de Parité (PT) et de Bravyi-Kitaev (BKT) sont parmi les plus utilisées en calculs quantiques. Pour plus de détails, consulter J. T. Seeley, M. J. Richard, and P. J. Love, "\textit{The Bravyi-Kitaev transformation for quantum computation of electronic structure}", J. Chem. Phys. \textbf{137}, 224109 (2012).
-
-%\begin{figure}[h!]
-%    \centering
-%    \includegraphics[width=0.7\linewidth]{./Graphics/mapping_comparison.png}
-%    \caption{\textit{Comparaison des différentes transformations fermion-qubit pour un système à 4 qubits. Les couleurs représentent les types d'opérateurs Pauli impliqués.}}
-%    \label{fig:mapping_compare}
-%\end{figure}
+En simulation quantique, encoder un problème de structure électronique en seconde quantification sur un calculateur quantique implique d'établir une correspondance entre les opérateurs d'échelle fermioniques et les opérateurs de Pauli. Les transformations de Jordan-Wigner (JWT), de Parité (PT) et de Bravyi-Kitaev (BKT) sont parmi les plus couramment utilisées en calculs quantiques. Pour plus de détails, consulter J. T. Seeley, M. J. Richard, and P. J. Love, "\textit{The Bravyi-Kitaev transformation for quantum computation of electronic structure}", J. Chem. Phys. \textbf{137}, 224109 (2012).
 
 \subsubsection{Décomposition de Pauli}
 
-Les matrices de Pauli sont un ensemble de matrices hermitiennes et unitaires qui forment une base complète pour l'espace des opérateurs agissant sur un qubit. Cela signifie que tout opérateur agissant sur un qubit peut être exprimé comme une combinaison linéaire des matrices de Pauli. Cette propriété est cruciale pour la simulation quantique, car elle permet de décomposer l'Hamiltonien électronique en termes d'opérateurs simples qui peuvent être implémentés sur les qubits.
+Les matrices de Pauli constituent un ensemble de matrices qui sont à la fois Hermitiennes et unitaires, formant ainsi une base complète pour l'espace des opérateurs agissant sur un qubit. Cela signifie que tout opérateur agissant sur un qubit peut être exprimé comme une combinaison linéaire des matrices de Pauli. Cette propriété est essentielle pour la simulation quantique, car elle permet de décomposer l'Hamiltonien électronique en termes d'opérateurs simples qui peuvent être implémentés sur les qubits.
 
 Comme $\{\mathbb{I}, \mathtt{X}, \mathtt{Y}, \mathtt{Z}\}$,
 \begin{align}\label{eq:pauli_matrices}
-& \mathbb{I} := \op{0} + \op{1},\\
-& \mathtt{X} := \ket{0}\bra{1} + \ket{1}\bra{0}, \\
-& i \mathtt{Y} := \ket{0}\bra{1} - \ket{1}\bra{0}, \\
+& \mathbb{I} := \op{0} + \op{1},
+&& \mathtt{X} := \ket{0}\bra{1} + \ket{1}\bra{0}, 
+&& i \mathtt{Y} := \ket{0}\bra{1} - \ket{1}\bra{0}, 
 & \mathtt{Z} := \op{0} - \op{1}.
 \end{align}
  forme une base complète pour tout opérateur Hermitien 1- ou multi-qubit, l'ingrédient clé des algorithmes variationnels est de décomposer l'Hamiltonien électronique en termes de produits des matrices de Pauli :
@@ -337,7 +328,7 @@ Pour un Hamiltonien de la 2e quantification, le nombre total de chaînes de Paul
 Les opérateurs d'échelle qubit sont des opérateurs qui agissent localement sur les qubits et qui permettent de créer ou d'annihiler des excitations dans le système quantique. Ils sont analogues aux opérateurs de création et d'annihilation fermioniques, mais agissent sur les qubits au lieu des orbitales de spin. Dans cette section, nous allons définir ces opérateurs et examiner leurs propriétés.
 
 Ce sont les opérateurs suivants qui agissent localement sur les qubits :
-\begin{equation}\label{eq:qubit_operators}
+$$
 \begin{array}{l|l}
 \textbf{Opérateur qubit} & \textbf{Description} \\ \hline
 \mathbb{I} := \ket{0}\bra{0} + \ket{1}\bra{1} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} & \text{Identité} \\
@@ -346,9 +337,9 @@ Ce sont les opérateurs suivants qui agissent localement sur les qubits :
 \mathtt{Q}^+ \mathtt{Q}^- := \ket{1}\bra{1} = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix} = \frac12(\mathbb{I} - \mathtt{Z}) & \text{Un nombre (particule)} \\
 \mathtt{Q}^- \mathtt{Q}^+ := \ket{0}\bra{0} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} = \frac12(\mathbb{I} + \mathtt{Z}) & \text{Zéro nombre (trou)} \\ \hline
 \end{array}
-\end{equation}
+$$
 On a utilisé la notation de Dirac pour les opérateurs. On note également que :
-\begin{equation}\label{eq:qubit_operators_simplifies}
+$$
 \begin{array}{l|l}
 \textbf{Opérateur qubit} & \textbf{Description} \\ \hline
 \mathbb{I} := \op{0} + \op{1} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} & \text{Identité} \\
@@ -357,7 +348,7 @@ On a utilisé la notation de Dirac pour les opérateurs. On note également que 
 \mathtt{Q}^+ \mathtt{Q}^- := \op{1} = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix} = \frac12(\mathbb{I} - \mathtt{Z}) & \text{Un nombre (particule)} \\
 \mathtt{Q}^- \mathtt{Q}^+ := \op{0} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} = \frac12(\mathbb{I} + \mathtt{Z}) & \text{Zéro nombre (trou)} \\ \hline
 \end{array}
-\end{equation}
+$$
 Les opérateurs qubits sont antisymétriques : $\{\mathtt{Q}^+, \mathtt{Q}^-\} = \mathtt{Q}^+ \mathtt{Q}^- + \mathtt{Q}^- \mathtt{Q}^+ = 1$ pour la même spin-orbitale, de façon similaire aux opérateurs fermioniques.
 
 \begin{remark}{}{}
@@ -425,7 +416,7 @@ toutes les transformations que nous considérons, qui ne font intervenir que des
 \begin{equation}
      p_k = \sum_j [ \pi_n]_{kj}\ f_j,
 \end{equation}
-où $n$ est le nombre d'orbitales. $\pi_n$ est la matrice $(n\times n)$ suivant
+où $n$ est le nombre d'orbitales. $\pi_n$ représente la matrice $(n\times n)$ suivante
 \begin{align}
  & [\pi_n]_{kj} =  
   \begin{cases}
@@ -440,9 +431,9 @@ où $n$ est le nombre d'orbitales. $\pi_n$ est la matrice $(n\times n)$ suivant
   0 & 0 & \cdots & 1
  \end{pmatrix}
 \end{align}
-Soulignons que nous indexons la matrice $\pi_n$ à partir du coin inférieur droit, par souci de cohérence avec notre schéma de numérotation orbitale. 
+Il est important de souligner que nous indexons la matrice $\pi_n$ à partir du coin inférieur droit, afin de garantir la cohérence avec notre schéma de numérotation orbitale. 
 
-Par exemple, pour changer l'état de base du numéro d'occupation $|1 0 1 0 0 1 1 1\rangle$ en son état de base de parité correspondant $|1 0 0 1 1 1 0 1\rangle$, nous agissons avec la matrice $\pi_8$ sur la chaîne de bits appropriée :
+Par exemple, pour changer l'état de base du numéro d'occupation $|1 0 1 0 0 1 1 1\rangle$ en son état de base de parité correspondant $|1 0 0 1 1 1 0 1\rangle$, nous appliquons la matrice $\pi_8$ sur la chaîne de bits appropriée :
 \begin{equation}
     \begin{matrix}
 & \begin{matrix}f_7 & f_6 & f_5 & f_4 & f_3 & f_2 & f_1 & f_0 \end{matrix} \\
@@ -480,7 +471,7 @@ Par exemple, pour changer l'état de base du numéro d'occupation $|1 0 1 0 0 1 
  \end{pmatrix}
 \end{equation}
 
-Le tableau suivant donne quelques exemples de la transformation de parité.
+Le tableau suivant présente quelques exemples de la transformation de parité.
 $$
 \begin{array}{l|l}
 \textbf{Fermion} & \textbf{Qubit} \\ \hline
@@ -500,7 +491,7 @@ $$
 
 \subsection{Transformation de Bravyi-Kitaev (BKT)}
 
-Cette transformation combine la localité des nombres d'occupation et celle des parités, afin d'établir une correspondance entre les opérateurs de création et de destruction fermioniques et les opérateurs qubits sur $\mathcal{O}(\log_2M)$. Pour ce faire, elle fait correspondre les états du nombre d'occupations à des chaînes binaires définies de manière appropriée,
+Cette transformation combine la localité des nombres d'occupation et celle des parités, afin d'établir une correspondance entre les opérateurs de création et de destruction fermioniques et les opérateurs qubits sur $\mathcal{O}(\log_2M)$. Pour ce faire, elle fait correspondre les états du nombre d'occupation à des chaînes binaires définies de manière appropriée,
 \begin{align}
     &\ket{f_{M-1},\dots,f_k,\dots, f_1,f_0}\mapsto \ket{\mathbf{b}} , &&b_k = \sum_{j=0}^k B_{kj} \, f_j \, \pmod 2,\\
     &B_1 = [1], &&B_{2^{x+1}}= \begin{pmatrix} B_{2^x} & \mathtt{A}\\ \mathbb{O} & B_{2^x}\end{pmatrix} ,
@@ -553,24 +544,24 @@ Par exemple, pour changer l'état de base du numéro d'occupation $|1 0 1 0 0 1 
   1\\
  \end{pmatrix}
 \end{equation}
-Puisqu'elle ne nécessite que $\mathcal{O}(\log_2 M)$ opérateurs qubits, \textbf{les transformations BK permettent un codage plus économique des opérateurs fermioniques en opérateurs qubits}, avec un coût réduit pour les  mesures et les circuits quantiques. Mais elle ne s'applique que sur des  systèmes de $N$ est pair, c'est-à-dire $N=2^m$.
+Puisqu'elle ne nécessite que $\mathcal{O}(\log_2 M)$ opérateurs qubits, \textbf{les transformations BK permettent un codage plus économique des opérateurs fermioniques en opérateurs qubits}, avec un coût réduit pour les  mesures et les circuits quantiques. Cependant, cette méthode ne s'applique que sur des systèmes de $N$ qui sont pairs, c'est-à-dire $N=2^m$.
 
-Le tableau suivant donne quelques exemples de la transformation BK.
+Le tableau suivant présente quelques exemples de la transformation BK.
 $$
 \begin{array}{l|l}
 \textbf{Fermion} & \textbf{Qubit} \\ \hline
 a\ket{0001}+b\ket{0010}+c\ket{0100}+d\ket{1000} & a\ket{1011}+b\ket{1010}+c\ket{1100}+d\ket{1000}  \\
 a_0 ,\quad a_1 ,\quad a_2 ,\quad a_3 &
 \begin{aligned}
-&\mathtt{X}_3\mathtt{X}_1Q^-_0 ,\quad \mathtt{X}_3\big( Q^-_1\proj{0}_0 - Q^+_1\proj{1}_0 \big) ,\\ &\mathtt{X}_3Q^-_2\mathtt{Z}_1 ,\quad 
+&\mathtt{X}_3\mathtt{X}_1Q^-_0 ,\quad \mathtt{X}_3\big( Q^-_1\op{0}_0 - Q^+_1\op{1}_0 \big) ,\\ &\mathtt{X}_3Q^-_2\mathtt{Z}_1 ,\quad 
 \frac12\Big(Q^-_3(\mathbb{I} + \mathtt{Z_2Z_1}) -  Q^+_3(\mathbb{I} - \mathtt{Z_2Z_1})\Big)
 \end{aligned} \\
-\ad_0 ,\quad \ad_1 ,\quad \ad_2 ,\quad \ad_3 &
+a^\dagger_0 ,\quad a^\dagger_1 ,\quad a^\dagger_2 ,\quad a^\dagger_3 &
 \begin{aligned}
-&\mathtt{X}_3\mathtt{X}_1Q^+_0 ,\quad \mathtt{X}_3\big( Q^+_1\proj{0}_0 - Q^-_1\proj{1}_0 \big) ,\\ &\mathtt{X}_3Q^+_2\mathtt{Z}_1 ,\quad 
+&\mathtt{X}_3\mathtt{X}_1Q^+_0 ,\quad \mathtt{X}_3\big( Q^+_1\op{0}_0 - Q^-_1\op{1}_0 \big) ,\\ &\mathtt{X}_3Q^+_2\mathtt{Z}_1 ,\quad 
 \frac12\Big(Q^+_3(\mathbb{I} + \mathtt{Z_2Z_1}) -  Q^-_3(\mathbb{I} - \mathtt{Z_2Z_1})\Big)
 \end{aligned} \\
-n_k = \ad_k a_k & \proj{1}_{k=0,2} ,\quad  \frac12(\mathbb{I} - \mathtt{Z}_1\mathtt{Z}_{0})_{k=1},
+n_k = a^\dagger_k a_k & \op{1}_{k=0,2} ,\quad  \frac12(\mathbb{I} - \mathtt{Z}_1\mathtt{Z}_{0})_{k=1},
 \quad  \frac12(\mathbb{I} - \mathtt{Z}_2\mathtt{Z}_1\mathtt{Z}_{0})_{k=3}
 \\\hline
 \end{array}
@@ -580,7 +571,7 @@ $$
 
 \begin{table}[h!]
     \centering
-    \caption{Comparaison des mappings fermion-qubit}
+    \caption{Comparaison des mappings fermion-qubit.}
     \begin{tabular}{l |c| c| c}
         \toprule
         \textbf{Métrique} & JWT & Parité & BKT \\
@@ -592,6 +583,13 @@ $$
     \end{tabular}
     \label{tab:mapping_comparison}
 \end{table}
+
+\begin{figure}[tbph]
+\centering
+\includegraphics[width=0.7\linewidth]{Graphics/Comparaison_Mappings_Fermion-Qubit}
+\caption{Comparaison des mappings fermion-qubit}
+\label{fig:mappings_fermion-qubit}
+\end{figure}
 
 
 \subsection{Exemple : Molécule d'hydrogène}\label{sec:H2_example}
@@ -636,11 +634,11 @@ H = -1.05\ \mathbb{I} + 0.79\mathtt{Z}_0 + 0.79\mathtt{Z}_1 + 0.60\mathtt{Z}_0Z_
 \item both the above?
 \end{enumerate}
 
-\item Name three fermion to qubit transformations currently supported by Qiskit Nature.
+\item Name three fermion-to-qubit transformations currently supported by Qiskit Nature.
 
-\item Name two fermion to qubit transformations that simulates a system of electrons with the same number of qubits as electrons.
+\item Name two fermion to qubit transformations that simulate a system of electrons with the same number of qubits as electrons.
 
-\item For which transformation does the resulting Hamiltonian commute with the number spin up and number spin down operators which can be used to taper off two qubits?
+\item For which transformation does the resulting Hamiltonian commute with the number operators for spin-up and spin-down states? These operators can be utilized to taper off two qubits.
 \end{enumerate}
 
 
@@ -649,12 +647,12 @@ H = -1.05\ \mathbb{I} + 0.79\mathtt{Z}_0 + 0.79\mathtt{Z}_1 + 0.60\mathtt{Z}_0Z_
 Ce chapitre a présenté les fondements théoriques et pratiques de la conversion des Hamiltoniens moléculaires en formalismes adaptés aux calculateurs quantiques. Les points clés à retenir sont :
 
 \begin{itemize}
-    \item La seconde quantification permet une description compacte des systèmes électroniques
-    \item Les mappings fermion-qubit préservent les relations d'anticommutation
-    \item Le choix du mapping influence directement les performances du calcul quantique
+    \item La seconde quantification offre une représentation concise des systèmes électroniques.
+    \item Les mappings fermion-qubit conservent les relations d'anticommutation.
+    \item Le choix du mapping affecte directement l'efficacité du calcul quantique.
 \end{itemize}
 
-Ces concepts seront mis en pratique dans lors des ateliers à travers l'implémentation complète d'un algorithme VQE pour la molécure de H$_2$ sur un simulateur quantique.
+Ces concepts seront mis en pratique lors des ateliers à travers l'implémentation complète d'un algorithme VQE pour la molécule de H$_2$ sur un simulateur quantique.
 
 \end{document}
 
