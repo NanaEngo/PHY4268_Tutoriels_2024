@@ -429,8 +429,6 @@ Pour un Hamiltonien de la 2e quantification, le nombre total de chaînes de Paul
 \begin{definition}{Opérateurs d'échelle qubit}{}
 Les opérateurs d'échelle qubit sont des opérateurs qui agissent localement sur les qubits et qui permettent de créer ou d'annihiler des excitations dans le système quantique. Ils sont analogues aux opérateurs de création et d'annihilation fermioniques, mais agissent sur les qubits au lieu des orbitales de spin.
 \end{definition}
-
-Ce sont les opérateurs suivants qui agissent localement sur les qubits :
 $$
 \begin{array}{l|l}
 \textbf{Opérateur qubit} & \textbf{Description} \\ \hline
@@ -441,20 +439,9 @@ $$
 \mathtt{Q}^- \mathtt{Q}^+ := \ket{0}\bra{0} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} = \frac12(\mathbb{I} + \mathtt{Z}) & \text{Zéro nombre (trou)} \\ \hline
 \end{array}
 $$
-On a utilisé la notation de Dirac pour les opérateurs. On note également que :
-$$
-\begin{array}{l|l}
-\textbf{Opérateur qubit} & \textbf{Description} \\ \hline
-\mathbb{I} := \op{0} + \op{1} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} & \text{Identité} \\
-\mathtt{Q}^- := \op{0}{1} = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix} = \frac12(\mathtt{X} + i\mathtt{Y}) & \text{Annihilation} \\
-\mathtt{Q}^+ := \op{1}{0} = \begin{pmatrix} 0 & 0 \\ 1 & 0 \end{pmatrix} = \frac12(\mathtt{X} - i\mathtt{Y}) & \text{Création} \\
-\mathtt{Q}^+ \mathtt{Q}^- := \op{1} = \begin{pmatrix} 0 & 0 \\ 0 & 1 \end{pmatrix} = \frac12(\mathbb{I} - \mathtt{Z}) & \text{Un nombre (particule)} \\
-\mathtt{Q}^- \mathtt{Q}^+ := \op{0} = \begin{pmatrix} 1 & 0 \\ 0 & 0 \end{pmatrix} = \frac12(\mathbb{I} + \mathtt{Z}) & \text{Zéro nombre (trou)} \\ \hline
-\end{array}
-$$
 Les opérateurs qubits sont antisymétriques : $\{\mathtt{Q}^+, \mathtt{Q}^-\} = \mathtt{Q}^+ \mathtt{Q}^- + \mathtt{Q}^- \mathtt{Q}^+ = 1$ pour la même spin-orbitale, de façon similaire aux opérateurs fermioniques.
 
-\begin{remark}{}{}
+\begin{remark}{Signification intuitive}{}
 On note que $\op{j}{i}$ signifie que l'état initial est $\ket{i}$ et l'état final est $\ket{j}$. C'est ainsi que 
 \begin{itemize}
 \item $\mathtt{Q}^-\ket{1}=\ket{0}$ et $\mathtt{Q}^-\ket{0}=0$ signifie que $\mathtt{Q}^-=\op{0}{1}=\frac12(\mathtt{X} + i\mathtt{Y}) $ ;
