@@ -44,7 +44,7 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 \usepackage{float} % Gère le placement des objets flottants
 \floatplacement{figure}{H} % Forces les figures à être placées exactement à l'endroit où elles apparaissent dans le texte
 
-\usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
+ \usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
 \usepackage{array, multicol, wrapfig, lmodern, multirow, booktabs, chemformula} % Diverses améliorations de mise en forme
 \usepackage[detect-all=true, group-minimum-digits=4]{siunitx} % Pour les unités SI
 
@@ -109,15 +109,14 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 %\vspace{0.5cm}
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!70,title=Contexte pédagogique,beamer]
-Ce chapitre s'inscrit dans la séquence d'apprentissage suivante :
+Ce chapitre fait partie de la séquence d'apprentissage suivante :
 \begin{itemize}
     \item\textbf{Cours magistral} - Fondements théoriques des correspondances fermion-qubit;
     \item\textbf{Atelier} - Implémentation sur simulateur quantique (Qiskit).
 \end{itemize}
 \end{tcolorbox}
 
-Après avoir établi les bases théoriques de la génération des intégrales moléculaires (théorie Hartree-Fock)
-aux Chapitres 1 et 2, le présent Chapitre aborde le principe de l'encodage d'un problème de structure électronique en seconde quantification sur un calculateur quantique. Il s'agit d'établir une correspondance entre les opérateurs d'échelle fermioniques (Hamiltonien en seconde quantification ou Hamiltonien fermionique) et les opérateurs de Pauli (Hamiltonien Qubit), à travers les transformations de Jordan-Wigner (JWT), de parité (PT) ou de Bravyi-Kitaev (BKT) (voir les parties marquées en rouge sur la \autoref{fig:VQE_flowchart} présentant la VQE).
+Après avoir établi les bases théoriques de la génération des intégrales moléculaires (théorie Hartree-Fock) dans les Chapitres 1 et 2, le présent Chapitre aborde le principe de l'encodage d'un problème de structure électronique en seconde quantification sur un calculateur quantique. L'objectif est d'établir une correspondance entre les opérateurs d'échelle fermioniques (Hamiltonien en seconde quantification ou Hamiltonien fermionique) et les opérateurs de Pauli (Hamiltonien Qubit). Cela se fait à travers les transformations de Jordan-Wigner (JWT), de parité (PT) ou de Bravyi-Kitaev (BKT) (voir les parties marquées en rouge sur la \autoref{fig:VQE_flowchart} présentant la VQE).
 
 \begin{figure}[h!]
     \centering
@@ -127,7 +126,7 @@ aux Chapitres 1 et 2, le présent Chapitre aborde le principe de l'encodage d'un
 \end{figure}
 
 \noindent\textbf{Pourquoi cette étape est essentielle ?} \\
-La conversion fidèle des Hamiltoniens moléculaires en opérateurs qubits constitue le \textit{pont quantique} entre chimie quantique théorique et calcul quantique. Une erreur à cette étape rendrait toute simulation ultérieure inutile, d'où l'importance d'en maîtriser chaque subtilité.
+La conversion fidèle des Hamiltoniens moléculaires en opérateurs qubits constitue le \textit{pont quantique} entre la chimie quantique théorique et le calcul quantique. Une erreur à cette étape rendrait toute simulation ultérieure inutile, d'où l'importance de maîtriser chaque subtilité.
 
 \subsection*{Structure pédagogique du chapitre}
 \begin{itemize}[leftmargin=*,nosep]
@@ -146,11 +145,11 @@ La conversion fidèle des Hamiltoniens moléculaires en opérateurs qubits const
 \end{itemize}
 
 \begin{tcolorbox}[colback=blue!5!white,colframe=blue!70,title={À vos simulateurs !},beamer]
-Les compétences acquises ici seront directement mises en œuvre lors des ateliers pratiques où vous :
+Les compétences acquises ici seront directement mises en œuvre lors des ateliers pratiques. Dans ces ateliers, vous aurez l'occasion de :
 \begin{itemize}
-    \item Programmerez ces transformations en Python (bibliothèque Qiskit)
-    \item Comparerez expérimentalement les différents mappings 
-    \item Mesurerez l'impact des approximations sur la précision des résultats
+    \item Programmez ces transformations en Python (bibliothèque Qiskit)
+    \item Comparez expérimentalement les différents mappings 
+    \item Mesurez l'impact des approximations sur la précision des résultats
 \end{itemize}
 \end{tcolorbox}
 
@@ -160,7 +159,6 @@ Les compétences acquises ici seront directement mises en œuvre lors des atelie
 Dans cette section, nous allons explorer comment l'Hamiltonien électronique d'une molécule peut être exprimé en utilisant le formalisme de la seconde quantification. Cette approche est particulièrement utile pour les calculs en chimie quantique, car elle simplifie la manipulation des opérateurs et permet de décrire les systèmes à plusieurs électrons de manière concise. Nous allons voir comment les intégrales moléculaires, qui sont des quantités fondamentales dans les calculs de structure électronique, sont générées et utilisées pour construire l'Hamiltonien.
 
 \subsection{Représentation nombre d'occupation}
-
 
 La puissance du formalisme de seconde quantification réside dans sa capacité à décrire les états électroniques de façon concise grâce à la \textbf{représentation nombre d'occupation}. Plutôt que de suivre individuellement chaque électron, on spécifie simplement quels spin-orbitales sont occupés.
 
@@ -173,7 +171,6 @@ où :
     \item $f_i = 1$ si le spin-orbite $\phi_i$ est occupé (c'est-à-dire qu'il contient un électron) et donc présent dans le déterminant de Slater.
     \item $f_i = 0$ si le spin-orbite $\phi_i$ est vide (c'est-à-dire qu'il ne contient pas d'électron) et donc absent du déterminant de Slater.
 \end{itemize}
-
 Chaque état de base correspond à un déterminant de Slater antisymétrisé. Les vecteurs d'état élémentaires sont définis par :
 \begin{align}\label{eq:occupation_states}
 & \ket{0} = \begin{pmatrix} 1 \\ 0 \end{pmatrix} : \text{état vide}, \\
@@ -191,7 +188,7 @@ Dans un \textbf{Exemple d'illustration} chapitre 1, nous avons considéré un sy
 & \ket{B_\uparrow} = \ket{10} = \ket{\mathbf{2}}, \\
 & \ket{B_\downarrow} = \ket{11} = \ket{\mathbf{3}}.
 \end{align}
-Nous supposons que l'état Hartree-Fock pour ce système est \textbf{a les deux électrons occupant les orbitales $\ket{A}$}. Nous stockons les occupations des orbitales de spin $\ket{A_\uparrow}$, $\ket{A_\downarrow}$, $\ket{B_\uparrow}$, $\ket{B_\downarrow}$ que nous ordonnons comme $\ket{f_{B_\downarrow}, f_{B_\uparrow}, f_{A_\downarrow}, f_{A_\uparrow}}$, avec $f_i = 0, 1$ (dans l'espace de Fock fermionique).
+Nous supposons que l'état de Hartree-Fock pour ce système est \textbf{a les deux électrons occupant les orbitales $\ket{A}$}. Nous stockons les occupations des orbitales de spin $\ket{A_\uparrow}$, $\ket{A_\downarrow}$, $\ket{B_\uparrow}$, $\ket{B_\downarrow}$ que nous ordonnons comme $\ket{f_{B_\downarrow}, f_{B_\uparrow}, f_{A_\downarrow}, f_{A_\uparrow}}$, avec $f_i = 0, 1$ (dans l'espace de Fock fermionique).
 
 \begin{enumerate}
     \item Écrivez, dans l'espace de Fock fermionique, l'état Hartree-Fock $\ket{\Psi_{\rm HF}}$, c'est-à-dire la correspondance du déterminant de Slater antisymétrisé obtenu dans l'\textbf{Exemple d'illustration}.
@@ -204,9 +201,7 @@ Nous supposons que l'état Hartree-Fock pour ce système est \textbf{a les deux 
     \ket{\Psi_{\rm HF}} = \alpha \ket{0011} + \beta \ket{1100} + \ket{1001} + \ket{0101}.
     \end{equation}
 \end{enumerate}
-
 \end{example}
-
 
 \subsection{Opérateurs fermioniques}
 
@@ -237,7 +232,7 @@ $n_i = a^\dagger_i a_i$ & Compte l'occupation de l'orbitale $i$ & $n_i \ket{f} =
 \label{tab:fermion_operators}
 \end{table}
 
-La nature fermionique des électrons implique que les fonctions d'état composées de plusieurs électrons doivent être antisymétriques lorsqu'il s'agit d'échanger deux particules. Cela se traduit par la manière dont les opérateurs de création et d'annihilation agissent sur les déterminants $\ket{f}$ :
+La nature fermionique des électrons implique que les fonctions d'état, composées de plusieurs électrons, doivent être antisymétriques lors de l'échange de deux particules. Cela se traduit par la façon dont les opérateurs de création et d'annihilation agissent sur les déterminants $\ket{f}$ :
 \begin{align}\label{eq:fermion_operators}
 & a_i \ket{f_{M-1}, \dots, f_{i-1}, f_i, f_{i+1}, \dots, f_0} = \delta_{f_i, 1} (-1)^{\sum_{m < i} f_m} \ket{f_{M-1}, \dots, f_{i-1}, f_i \oplus 1, f_{i+1}, \dots, f_0}, \\
 & a^\dagger_i \ket{f_{M-1}, \dots, f_i,  \dots, f_0} = \delta_{f_i, 0} (-1)^{\sum_{m < i} f_m} \ket{f_{M-1}, \dots, f_{i-1}, f_i \oplus 1, f_{i+1}, \dots, f_0}, \\
@@ -255,10 +250,8 @@ où :
     \item L'opérateur d'annihilation $a_i$ supprime un électron dans une orbitale occupée $i$ (ou en $\ket{f_i}$).
     \item $a_i^2 = (a^\dagger_i)^2 = 0$ pour tout $i$. On ne peut pas créer ou anéantir un fermion dans le même mode deux fois.
 \end{itemize}
-
 Par exemple :
-\begin{align}
-\label{eq:fermion_example}
+\begin{align}\label{eq:fermion_example}
 & a^\dagger_1 \ket{0}_1 = \ket{1}_1, \\
 & a^\dagger_1 \ket{1}_1 = (a^\dagger_i)^2 \ket{0}_1 = 0, \\
 & a_1 \ket{1}_1 = \ket{0}_1, \\
@@ -267,8 +260,7 @@ Par exemple :
 Notez qu'ici $a^\dagger_1 \ket{1}_1 = 0$ et $a_1 \ket{0}_1 = 0$ signifient le vecteur nul (zéro) et non $\ket{0}_1$.
 
 En utilisant également de tels opérateurs, nous pouvons exprimer :
-\begin{equation}
-\label{eq:example_expression}
+\begin{equation}\label{eq:example_expression}
 \ket{0} \ket{1} \ket{1} \ket{0} = a^\dagger_1 a^\dagger_2 \ket{0}^{\otimes 4}.
 \end{equation}
 
@@ -281,8 +273,7 @@ a^\dagger_1 a_2 \ket{10} &= 0 \quad (\text{principe d'exclusion de Pauli})
 \end{example}
 
 L'opérateur d'occupation orbitale est donné par :
-\begin{align}
-\label{eq:occupation_operator}
+\begin{align}\label{eq:occupation_operator}
 & n_i = a^\dagger_i a_i, \\
 & n_i \ket{f_{M-1}, \dots, f_i, \dots, f_0} = f_i \ket{f_{M-1}, \dots, f_i, \dots, f_0},
 \end{align}
@@ -292,7 +283,6 @@ et il compte le nombre d'électrons présents dans une orbitale spécifique, c'e
 & n_i \ket{0}_i = 0, \\
 & n_i \ket{1}_i = \ket{1}_i.
 \end{align}
-
 
 \subsection{Génération des intégrales moléculaires}
 
@@ -308,7 +298,7 @@ L'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}: il exc
     \label{fig:Integrales_fermioniques}
 \end{figure}
 
-Les intégrales $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction Coulombienne avec le potentiel créé par les noyaux atomiques. Elles se calculent comme :
+Les intégrales $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction Coulombienne avec le potentiel créé par les noyaux atomiques. Elles se calculent comme suit :
 \begin{equation}\label{eq:h_pq}
 h_{pq} = \int \phi^*_p(\mathbf{r}) \left( -\frac12 \nabla^2 - \sum_{I} \frac{Z_I}{|\mathbf{r}-\mathbf{R}_I|} \right)   \phi_q(\mathbf{r})d\mathbf{r},
 \end{equation}
@@ -319,7 +309,7 @@ où :
     \item $\mathbf{R}_I$ est la position du noyau $I$.
 \end{itemize}
 
-Les intégrales $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décriventles interactions Coulombiennes entre les électrons. Elles se calculent comme :
+Les intégrales $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décrivent les interactions Coulombiennes entre les électrons. Elles se calculent comme suit :
 \begin{equation}\label{eq:h_pqrs}
 h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mathbf{r}_2)  \phi_s(\mathbf{r}_1)}
 {|\mathbf{r}_1-\mathbf{r}_2|}d\mathbf{r}_1d\mathbf{r}_2,
@@ -340,14 +330,15 @@ Le \autoref{tab:integrales} résume les correspondances entre les éléments du 
     \label{tab:integrales}
 \end{table}
 
-\subsection*{\faExclamationTriangle~ Attention aux pièges !}
+\begin{marker}
 \begin{itemize}
     \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la \textit{convention Physicist} : $\langle pq|rs\rangle$ (pas de permutation automatique).
     \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est essentiel : intervertir $a_r$ et $a_s$ introduit un signe $-$.
 \end{itemize}
+\end{marker}
 
 \begin{example}{Molécule de \ch{H2} dans une base minimale}{}
-Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
+Pour la molécule \ch{H2}, qui possède 2 orbitales moléculaires $\phi_0$ et $\phi_1$, on peut considérer les points suivants :
 \begin{itemize}
     \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $h_{01}=h_{10}$).
     \item Termes à 2 électrons : Seule $h_{0011}$ contribue significativement.
@@ -356,13 +347,13 @@ Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
 \end{example}
 
 \begin{example}{Exercice rapide}{}
-Pour 2 orbitales $\phi_0$, $\phi_1$ :
+Pour 2 orbitales $\phi_0$ et $\phi_1$ :
 \begin{enumerate}
     \item Écrire le terme d'interaction $a_0^\dagger a_1^\dagger a_1 a_0$ en notation normale (avec $n_p = a_p^\dagger a_p$).
     \item Quel est le rôle physique de ce terme ? (Indice : Pensez à la répulsion entre électrons.)
 \end{enumerate}
 \tcblower
-\footnotesize\textit{Réponse :} $n_0 n_1$ décrit la répulsion entre électrons dans les orbitales 0 et 1.
+\footnotesize \textit{Réponse :} $n_0 n_1$ décrit la répulsion entre les électrons dans les orbitales 0 et 1.
 \end{example}
 
 \subsection{Orbitales moléculaires et orbitales de spin} 
@@ -377,22 +368,33 @@ Un des avantages importants du formalisme de seconde quantification est que la p
 \section{Hamiltonien Qubit}
 
 Pour simuler des systèmes quantiques sur des calculateurs quantiques, il est nécessaire de transformer les opérateurs fermioniques, qui décrivent les électrons dans les molécules, en opérateurs qubit, qui peuvent être implémentés sur les qubits des calculateurs quantiques. Cette transformation est connue sous le nom de "mapping fermion-qubit". Dans cette section, nous allons explorer les principales méthodes de mapping fermion-qubit, telles que les transformations de
-\begin{itemize}
-\item Jordan-Wigner : simple mais peu efficace; 
-\item Bravyi-Kitaev : efficace pour les systèmes corrélés ;
-\item Parité : optimisée pour les systèmes à symétrie particulière.
-\end{itemize}
+\begin{description}
+\item[Jordan-Wigner (JWT)] qui est un mapping direct mais peu efficace pour les grands systèmes;
+\item[Parité (PT)] qui est optimisée pour les systèmes à symétrie de spin;
+\item[Bravyi-Kitaev (BKT)] qui est mapping combine équilibre efficacité/localité via une représentation arborescente. Il est efficace pour les systèmes corrélés.
+\end{description}
 
-\begin{remark}{Choix du mapping}{}
-Le choix du mapping impacte directement :
+\begin{remark}{Critères de choix}{}
+Le choix du mapping dépend de :
 \begin{itemize}
-\item Le nombre de termes Pauli générés
-\item La profondeur des circuits quantiques
-\item La précision numérique des résultats
+\item La connectivité du matériel quantique;
+\item La complexité de l'Hamiltonien;
+\item Les ressources computationnelles disponibles.
 \end{itemize}
 \end{remark}
 
-\subsection{Correspondance (mapping) fermion-qubit}
+\subsection{Stratégies de mapping fermion-qubit}
+\label{subsec:mapping_strategies}
+
+Pour simuler des systèmes moléculaires sur calculateur quantique, une transformation cruciale consiste à mapper les opérateurs fermioniques sur des opérateurs qubit. Trois méthodes principales sont utilisées :
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\textwidth]{mapping_strategies.pdf}
+    \caption{Comparaison des différentes stratégies de mapping. Chaque approche présente des avantages spécifiques selon la topologie du problème.}
+    \label{fig:mapping_strategies}
+\end{figure}
+
 
 En simulation quantique, encoder un problème de structure électronique en seconde quantification sur un calculateur quantique implique d'établir une correspondance entre les opérateurs d'échelle fermioniques et les opérateurs de Pauli. Les transformations de Jordan-Wigner (JWT), de Parité (PT) et de Bravyi-Kitaev (BKT) sont parmi les plus couramment utilisées en calculs quantiques. Pour plus de détails, consulter J. T. Seeley, M. J. Richard, and P. J. Love, "\textit{The Bravyi-Kitaev transformation for quantum computation of electronic structure}", J. Chem. Phys. \textbf{137}, 224109 (2012).
 
