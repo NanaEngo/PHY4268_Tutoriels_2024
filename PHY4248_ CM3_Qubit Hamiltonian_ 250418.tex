@@ -159,110 +159,6 @@ Les compétences acquises ici seront directement mises en œuvre lors des atelie
 
 Dans cette section, nous allons explorer comment l'Hamiltonien électronique d'une molécule peut être exprimé en utilisant le formalisme de la seconde quantification. Cette approche est particulièrement utile pour les calculs en chimie quantique, car elle simplifie la manipulation des opérateurs et permet de décrire les systèmes à plusieurs électrons de manière concise. Nous allons voir comment les intégrales moléculaires, qui sont des quantités fondamentales dans les calculs de structure électronique, sont générées et utilisées pour construire l'Hamiltonien.
 
-\subsection{Génération des intégrales moléculaires}
-
-L'Hamiltonien électronique est exprimé dans la base des solutions de la méthode Hartree-Fock (HF), également appelées Orbitales Moléculaires (OM). Rappelons que la méthode HF est une méthode variationnelle qui permet d'approximer la fonction d'état électronique d'un système moléculaire. Cette approximation est réalisée en considérant que chaque électron se déplace dans un champ moyen créé par les autres électrons. Les orbitales moléculaires obtenues par cette méthode forment une base orthonormée qui peut être utilisée pour exprimer l'Hamiltonien électronique.
-
-L'Hamiltonien s'écrit :
-\begin{equation}\label{eq:H_elec}
-\mathtt{H}_{\rm elec}=\sum_{pq} h_{pq} a^{\dagger}_p a_q + \frac12 \sum_{pqrs} h_{pqrs}  a^{\dagger}_p a^{\dagger}_q a_r  a_s,
-\end{equation}
-où :
-\begin{itemize}
-    \item $a^{\dagger}_p$ est l'\textbf{opérateur de création} d'un électron dans le spin-orbite $p$. Cet opérateur ajoute un électron à l'orbitale de spin $p$;
-    \item $a_q$ est l'\textbf{opérateur d'annihilation} d'un électron dans le spin-orbite $q$. Cet opérateur supprime un électron de l'orbitale de spin $q$;
-    \item $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction avec le potentiel créé par les noyaux atomiques;
-    \item $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décrivent l'interaction coulombienne entre les électrons.
-\end{itemize}
-
-Les intégrales pour un électron sont exprimées comme suit :
-\begin{equation}\label{eq:h_pq}
-h_{pq} = \int \phi^*_p(\mathbf{r}) \left( -\frac12 \nabla^2 - \sum_{I} \frac{Z_I}{|\mathbf{r}-\mathbf{R}_I|} \right)   \phi_q(\mathbf{r})d\mathbf{r},
-\end{equation}
-où :
-\begin{itemize}
-    \item $\phi_p(\mathbf{r})$ est l'orbitale moléculaire $p$ au point $\mathbf{r}$;
-    \item $Z_I$ est la charge du noyau $I$;
-    \item $\mathbf{R}_I$ est la position du noyau $I$.
-\end{itemize}
-Ces intégrales décrivent l'énergie cinétique des électrons individuels, ainsi que leurs interactions Coulombiennes avec les champs électriques générés par le noyau.
-
-Les intégrales à deux électrons sont données par :
-\begin{equation}\label{eq:h_pqrs}
-h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mathbf{r}_2)  \phi_s(\mathbf{r}_1)}
-{|\mathbf{r}_1-\mathbf{r}_2|}d\mathbf{r}_1d\mathbf{r}_2,
-\end{equation}
-où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. Ces intégrales décrivent les interactions Coulombiennes entre les électrons.
-
-Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
-
-\paragraph*{Exemple : Molécule de \ch{H2} dans une base minimale}
-Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
-\begin{itemize}
-    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\Rightarrow h_{01}=h_{10}$).
-    \item Termes à 2 électrons : Seulement $h_{0011}$ contribue significativement.
-    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
-\end{itemize}
-
-\subsection*{\faExclamationTriangle~ Attention aux pièges !}
-\begin{itemize}
-    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
-    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
-\end{itemize}
-
-\begin{table}[h]
-    \centering
-    \begin{tabular}{|l|l|l|}
-    \toprule
-    \textbf{Intégrale} & \textbf{Expression} & \textbf{Rôle physique} \\ \midrule
-    $h_{pq}$ & Éq.~\eqref{eq:h_pq} & Énergie cinétique + Attraction noyau-électron \\ \hline
-    $h_{pqrs}$ & Éq.~\eqref{eq:h_pqrs} & Répulsion électron-électron entre paires \\ \bottomrule
-    \end{tabular}
-    \caption{\textbf{Récapitulatif des intégrales moléculaires.} Les deux types d'intégrales et leur signification physique.}
-    \label{tab:integrales}
-\end{table}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=.7\linewidth]{Integrales_fermioniques.pdf}}
-    \caption{\textbf{Visualisation de l'Hamiltonien en seconde quantification.} (a) Termes à 1 électron : Mouvement d'un électron entre orbitales. (b) Termes à 2 électrons : Interaction Coulombienne entre paires d'électrons.}
-    \label{fig:Integrales_fermioniques}
-\end{figure}
-
-\begin{example}{Exercice rapide}{}
-Pour 2 orbitales $\phi_0$, $\phi_1$ :
-\begin{enumerate}
-    \item Écrire le terme d'interaction $a_0^\dagger a_1^\dagger a_1 a_0$ en notation normale (avec $n_p = a_p^\dagger a_p$).
-    \item Quel est le rôle physique de ce terme ? (Indice : Pensez à la répulsion entre électrons.)
-\end{enumerate}
-\tcblower
-\footnotesize\textit{Réponse :} $n_0 n_1$ décrit la répulsion entre électrons dans les orbitales 0 et 1.
-\end{example}
-
-%\subsection{Orbitales moléculaires et orbitales de spin} 
-%
-%Les orbitales moléculaires ($\phi_u$) peuvent être classées en deux catégories : occupées et virtuelles (inoccupées). Une orbitale moléculaire (OM) peut contenir au maximum deux électrons. Ces électrons doivent avoir des spins opposés, conformément au principe d'exclusion de Pauli. Ces orbitales moléculaires résultent de la méthode de Hartree-Fock (HF), qui suppose que chaque électron est soumis au champ moyen créé par tous les autres électrons.
-%
-%Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron, ce qui correspond à l'une des deux orientations de spin, ou être inoccupées.
-%
-%Le \autoref{tab:Quant12} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
-%
-%\begin{table}[htpb]
-%\begin{tabular}{|l|l|l|}\toprule
-%\textbf{Approximation BO}  &  \textbf{En 2e quantification} &  \textbf{Description} \\ \hline
-%$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \midrule
-%$-\sum_{i,I}\frac{Z_I}{|\mathbf{r}_i-\mathbf{R}_I|}$ &
-%$-\sum_{p,q} \langle p|\frac{Z_I}{|\mathbf{r}_p-\mathbf{R}_I|}|q\rangle a^\dagger_p a_q$ & $\mathtt{U}_{en}$ (interaction noyau-électron) \\ \hline
-%$\sum_{i,j>i}\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}$ & 
-%$\sum_{p,q,r,s}\langle pq \big|\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}\big|rs\rangle a^\dagger_p a^\dagger_q a_r a_s$ & 
-%$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \bottomrule
-%\end{tabular}
-%\caption{Correspondance Première et Seconde Quantification.}
-%\label{tab:Quant12}
-%\end{table}
-
-Un des avantages importants du formalisme de seconde quantification est que la propriété d'anti-symétrie des fonctions d'état pour l'échange de fermions identiques, qui est prise en compte manuellement dans une approche de première quantification à travers les déterminants de Slater, est automatiquement imposée par les relations d'anti-commutation des opérateurs de création et d'annihilation. Cependant, le prix à payer est que l'on travaille avec un nombre non fixe de particules, qui demeure cependant une quantité conservée.
-
 \subsection{Représentation nombre d'occupation}
 
 La représentation du nombre d'occupation est une méthode concise pour décrire l'état d'un système de fermions, tels que les électrons, en spécifiant le nombre de particules présentes dans chaque orbitale de spin. Au lieu de suivre chaque électron individuellement, cette approche se concentre sur le nombre d'électrons dans chaque état quantique possible. Cette représentation est particulièrement utile en seconde quantification, car elle facilite la manipulation des opérateurs de création et d'annihilation.
@@ -368,6 +264,111 @@ Nous supposons que l'état Hartree-Fock pour ce système est \textbf{a les deux 
     \ket{\Psi_{\rm HF}} = \alpha \ket{0011} + \beta \ket{1100} + \ket{1001} + \ket{0101}.
     \end{equation}
 \end{enumerate}
+
+\subsection{Génération des intégrales moléculaires}
+
+L'Hamiltonien électronique est exprimé dans la base des solutions de la méthode Hartree-Fock (HF), également appelées Orbitales Moléculaires (OM). Rappelons que la méthode HF est une méthode variationnelle qui permet d'approximer la fonction d'état électronique d'un système moléculaire. Cette approximation est réalisée en considérant que chaque électron se déplace dans un champ moyen créé par les autres électrons. Les orbitales moléculaires obtenues par cette méthode forment une base orthonormée qui peut être utilisée pour exprimer l'Hamiltonien électronique.
+
+L'Hamiltonien s'écrit :
+\begin{equation}\label{eq:H_elec}
+\mathtt{H}_{\rm elec}=\sum_{pq} h_{pq} a^{\dagger}_p a_q + \frac12 \sum_{pqrs} h_{pqrs}  a^{\dagger}_p a^{\dagger}_q a_r  a_s,
+\end{equation}
+où :
+\begin{itemize}
+    \item $a^{\dagger}_p$ est l'\textbf{opérateur de création} d'un électron dans le spin-orbite $p$. Cet opérateur ajoute un électron à l'orbitale de spin $p$;
+    \item $a_q$ est l'\textbf{opérateur d'annihilation} d'un électron dans le spin-orbite $q$. Cet opérateur supprime un électron de l'orbitale de spin $q$;
+    \item $h_{pq}$ sont les \textbf{intégrales à un électron}, qui décrivent l'énergie cinétique de l'électron et son interaction avec le potentiel créé par les noyaux atomiques;
+    \item $h_{pqrs}$ sont les \textbf{intégrales à deux électrons}, qui décrivent l'interaction coulombienne entre les électrons.
+\end{itemize}
+
+Les intégrales pour un électron sont exprimées comme suit :
+\begin{equation}\label{eq:h_pq}
+h_{pq} = \int \phi^*_p(\mathbf{r}) \left( -\frac12 \nabla^2 - \sum_{I} \frac{Z_I}{|\mathbf{r}-\mathbf{R}_I|} \right)   \phi_q(\mathbf{r})d\mathbf{r},
+\end{equation}
+où :
+\begin{itemize}
+    \item $\phi_p(\mathbf{r})$ est l'orbitale moléculaire $p$ au point $\mathbf{r}$;
+    \item $Z_I$ est la charge du noyau $I$;
+    \item $\mathbf{R}_I$ est la position du noyau $I$.
+\end{itemize}
+Ces intégrales décrivent l'énergie cinétique des électrons individuels, ainsi que leurs interactions Coulombiennes avec les champs électriques générés par le noyau.
+
+Les intégrales à deux électrons sont données par :
+\begin{equation}\label{eq:h_pqrs}
+h_{pqrs} = \int \frac{\phi^*_p(\mathbf{r}_1)  \phi^*_q(\mathbf{r}_2) \phi_r(\mathbf{r}_2)  \phi_s(\mathbf{r}_1)}
+{|\mathbf{r}_1-\mathbf{r}_2|}d\mathbf{r}_1d\mathbf{r}_2,
+\end{equation}
+où $\mathbf{r}_1$ et $\mathbf{r}_2$ sont les positions des deux électrons. Ces intégrales décrivent les interactions Coulombiennes entre les électrons.
+
+Il est important de noter que l'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}. Cet opérateur excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$.
+
+\paragraph*{Exemple : Molécule de \ch{H2} dans une base minimale}
+Pour la molécule \ch{H2} avec 2 orbitales moléculaires $\phi_0$ et $\phi_1$ :
+\begin{itemize}
+    \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $\Rightarrow h_{01}=h_{10}$).
+    \item Termes à 2 électrons : Seulement $h_{0011}$ contribue significativement.
+    \item Hamiltonien simplifié : $\mathtt{H} = h_{00}(a_0^\dagger a_0 + a_1^\dagger a_1) + h_{0011} a_0^\dagger a_1^\dagger a_1 a_0$.
+\end{itemize}
+
+\subsection*{\faExclamationTriangle~ Attention aux pièges !}
+\begin{itemize}
+    \item Les indices $pqrs$ dans $h_{pqrs}$ suivent la convention Physicist : $\langle pq|rs\rangle$ (pas de permutation automatique).
+    \item L'ordre des opérateurs dans $a_p^\dagger a_q^\dagger a_r a_s$ est crucial : intervertir $a_r$ et $a_s$ introduit un signe $-$.
+\end{itemize}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+    \toprule
+    \textbf{Intégrale} & \textbf{Expression} & \textbf{Rôle physique} \\ \midrule
+    $h_{pq}$ & Éq.~\eqref{eq:h_pq} & Énergie cinétique + Attraction noyau-électron \\ \hline
+    $h_{pqrs}$ & Éq.~\eqref{eq:h_pqrs} & Répulsion électron-électron entre paires \\ \bottomrule
+    \end{tabular}
+    \caption{\textbf{Récapitulatif des intégrales moléculaires.} Les deux types d'intégrales et leur signification physique.}
+    \label{tab:integrales}
+\end{table}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.7\linewidth]{Integrales_fermioniques.pdf}
+    \caption{\textbf{Visualisation de l'Hamiltonien en seconde quantification.} (a) Termes à 1 électron : Mouvement d'un électron entre orbitales. (b) Termes à 2 électrons : Interaction Coulombienne entre paires d'électrons.}
+    \label{fig:Integrales_fermioniques}
+\end{figure}
+
+\begin{example}{Exercice rapide}{}
+Pour 2 orbitales $\phi_0$, $\phi_1$ :
+\begin{enumerate}
+    \item Écrire le terme d'interaction $a_0^\dagger a_1^\dagger a_1 a_0$ en notation normale (avec $n_p = a_p^\dagger a_p$).
+    \item Quel est le rôle physique de ce terme ? (Indice : Pensez à la répulsion entre électrons.)
+\end{enumerate}
+\tcblower
+\footnotesize\textit{Réponse :} $n_0 n_1$ décrit la répulsion entre électrons dans les orbitales 0 et 1.
+\end{example}
+
+%\subsection{Orbitales moléculaires et orbitales de spin} 
+%
+%Les orbitales moléculaires ($\phi_u$) peuvent être classées en deux catégories : occupées et virtuelles (inoccupées). Une orbitale moléculaire (OM) peut contenir au maximum deux électrons. Ces électrons doivent avoir des spins opposés, conformément au principe d'exclusion de Pauli. Ces orbitales moléculaires résultent de la méthode de Hartree-Fock (HF), qui suppose que chaque électron est soumis au champ moyen créé par tous les autres électrons.
+%
+%Cependant, dans ce qui suit, nous travaillons en fait avec des \textbf{orbitales de spin}, qui sont associées à un spin up ($\alpha$) ou spin down ($\beta$). Ces deux spins sont également communément désignés par $\alpha$ et $\beta$, respectivement. Ainsi, les orbitales de spin peuvent contenir un électron, ce qui correspond à l'une des deux orientations de spin, ou être inoccupées.
+%
+%Le \autoref{tab:Quant12} résume les correspondances entre les éléments du Hamiltonien moléculaire dans les formalismes de première et de seconde quantification.
+%
+%\begin{table}[htpb]
+%\begin{tabular}{|l|l|l|}\toprule
+%\textbf{Approximation BO}  &  \textbf{En 2e quantification} &  \textbf{Description} \\ \hline
+%$-\frac12\sum_i\nabla^2_i$ & $-\frac12\sum_{p,q}\langle p|\nabla^2_p|q\rangle a^\dagger_p a_q$ & $\mathtt{T}_e$ (énergie cinétique) \\ \midrule
+%$-\sum_{i,I}\frac{Z_I}{|\mathbf{r}_i-\mathbf{R}_I|}$ &
+%$-\sum_{p,q} \langle p|\frac{Z_I}{|\mathbf{r}_p-\mathbf{R}_I|}|q\rangle a^\dagger_p a_q$ & $\mathtt{U}_{en}$ (interaction noyau-électron) \\ \hline
+%$\sum_{i,j>i}\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}$ & 
+%$\sum_{p,q,r,s}\langle pq \big|\frac{1}{|\mathbf{r}_i-\mathbf{r}_j|}\big|rs\rangle a^\dagger_p a^\dagger_q a_r a_s$ & 
+%$\mathtt{U}_{ee}$ (interaction électron-électron) \\ \bottomrule
+%\end{tabular}
+%\caption{Correspondance Première et Seconde Quantification.}
+%\label{tab:Quant12}
+%\end{table}
+
+Un des avantages importants du formalisme de seconde quantification est que la propriété d'anti-symétrie des fonctions d'état pour l'échange de fermions identiques, qui est prise en compte manuellement dans une approche de première quantification à travers les déterminants de Slater, est automatiquement imposée par les relations d'anti-commutation des opérateurs de création et d'annihilation. Cependant, le prix à payer est que l'on travaille avec un nombre non fixe de particules, qui demeure cependant une quantité conservée.
+
 
 \section{Hamiltonien Qubit}
 
