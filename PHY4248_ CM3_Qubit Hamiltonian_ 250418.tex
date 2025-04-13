@@ -296,12 +296,11 @@ et il compte le nombre d'électrons présents dans une orbitale spécifique, c'e
 
 \subsection{Génération des intégrales moléculaires}
 
-L'Hamiltonien électronique est exprimé dans la base des solutions de la méthode Hartree-Fock (HF), également appelées Orbitales Moléculaires (OM). Rappelons que la méthode HF est une méthode variationnelle qui permet d'approximer la fonction d'état électronique d'un système moléculaire. Cette approximation est réalisée en considérant que chaque électron se déplace dans un champ moyen créé par les autres électrons. Les orbitales moléculaires obtenues par cette méthode forment une base orthonormée qui peut être utilisée pour exprimer l'Hamiltonien électronique.
-
-L'Hamiltonien s'écrit :
+L'Hamiltonien électronique en seconde quantification s'exprime comme :
 \begin{equation}\label{eq:H_elec}
-\mathtt{H}_{\rm elec}=\sum_{pq} h_{pq} a^{\dagger}_p a_q + \frac12 \sum_{pqrs} h_{pqrs}  a^{\dagger}_p a^{\dagger}_q a_r  a_s,
+\mathtt{H}_{\rm elec} = \underbrace{\sum_{pq} h_{pq} a^\dagger_p a_q}_{\text{Termes à 1 électron}} + \frac12 \underbrace{\sum_{pqrs} h_{pqrs} a^\dagger_p a^\dagger_q a_r a_s}_{\text{Termes à 2 électrons}}
 \end{equation}
+
 où :
 \begin{itemize}
     \item $a^{\dagger}_p$ est l'\textbf{opérateur de création} d'un électron dans le spin-orbite $p$. Cet opérateur ajoute un électron à l'orbitale de spin $p$;
