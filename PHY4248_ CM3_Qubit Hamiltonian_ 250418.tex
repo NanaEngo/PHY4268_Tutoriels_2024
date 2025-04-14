@@ -383,12 +383,12 @@ Le choix du mapping dépend de :
 \end{itemize}
 \end{remark}
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.9\textwidth]{mapping_strategies.pdf}
-    \caption{Comparaison des différentes stratégies de mapping. Chaque approche présente des avantages spécifiques selon la topologie du problème. \textbf{Jordan-Wigner} : Représentation schématique des qubits en chaîne linéaire ; Opérateur typique avec chaîne de Pauli-Z; Avantages/inconvénients dans un encadré. \textbf{Parité} : Structure en échelle pour l'encodage de parité; Opérateur avec portée réduite. \textbf{Bravyi-Kitaev} : Représentation arborescente; Opérateur local avec dépendance hiérarchique; Analyse des performances relatives. Tableau comparatif en bas : Métriques clés comparant les différentes méthodes; Données typiques pour une molécule de \ch{H2}; Tableau comparatif des propriétés.}
-    \label{fig:mapping_strategies}
-\end{figure}
+%\begin{figure}[ht]
+%    \centering
+%    \includegraphics[width=0.9\textwidth]{mapping_strategies.pdf}
+%    \caption{Comparaison des différentes stratégies de mapping. Chaque approche présente des avantages spécifiques selon la topologie du problème. \textbf{Jordan-Wigner} : Représentation schématique des qubits en chaîne linéaire ; Opérateur typique avec chaîne de Pauli-Z; Avantages/inconvénients dans un encadré. \textbf{Parité} : Structure en échelle pour l'encodage de parité; Opérateur avec portée réduite. \textbf{Bravyi-Kitaev} : Représentation arborescente; Opérateur local avec dépendance hiérarchique; Analyse des performances relatives. Tableau comparatif en bas : Métriques clés comparant les différentes méthodes; Données typiques pour une molécule de \ch{H2}; Tableau comparatif des propriétés.}
+%    \label{fig:mapping_strategies}
+%\end{figure}
 
 \subsubsection{Décomposition de Pauli}
 
@@ -469,24 +469,32 @@ Les opérateurs fermioniques se transforment en :
 a_k^\dagger &\mapsto \frac12(\mathtt{X}_k - i\mathtt{Y}_k) \otimes \bigotimes_{m=0}^{k-1} \mathtt{Z}_m \label{eq:jwt_creation} \\
 a_k &\mapsto \frac12(\mathtt{X}_k + i\mathtt{Y}_k) \otimes \bigotimes_{m=0}^{k-1} \mathtt{Z}_m \label{eq:jwt_annihilation}
 \end{align}
-Par exemple, puisque $\mathtt{Z}_k^2=\mathbb{I}_k$, on a
-
-\begin{table}[h!]
-    \centering
-    \caption{Correspondance JWT pour un système à 4 orbitales}
-    \begin{tabular}{l|l}
-        \toprule
-        \textbf{Fermion} & \textbf{Qubit} \\
-        \midrule
-        $a_0^\dagger$ & $\mathtt{Q}_0^+$ \\
-        $a_1^\dagger$ & $\mathtt{Q}_1^+ \mathtt{Z}_0$ \\
-        $a_2^\dagger$ & $\mathtt{Q}_2^+ \mathtt{Z}_1 \mathtt{Z}_0$ \\
-        $a_3^\dagger$ & $\mathtt{Q}_3^+ \mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0$ \\
-        $n_k$ & $\frac12(\mathbb{I} - \mathtt{Z}_k)$ \\
-        \bottomrule
-    \end{tabular}
-    \label{tab:jwt_mapping}
-\end{table}
+Par exemple, puisque $\mathtt{Z}_k^2=\mathbb{I}_k$, on a la correspondance JWT suivante pour un système à 4 orbitales
+$$
+\begin{array}{l|l}
+\textbf{Fermion}  & \textbf{Qubit}  \\\hline
+a\ket{0001}+b\ket{0010}+c\ket{0100}+d\ket{1000} & a\ket{0001}+b\ket{0010}+c\ket{0100}+d\ket{1000} \\
+a_0,\quad  a_1,\quad  a_2,\quad a_3 &\mathtt{Q}^-_0,\quad \mathtt{Q}^-_1\mathtt{Z}_0,\quad \mathtt{Q}^-_2\mathtt{Z}_1 \mathtt{Z}_0,\quad \mathtt{Q}^-_3\mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0 \\
+\ad_0,\quad \ad_1,\quad \ad_2,\quad \ad_3 & \mathtt{Q}^+_0,\quad \mathtt{Q}^+_1\mathtt{Z}_0,\quad \mathtt{Q}^+_2\mathtt{Z}_1 \mathtt{Z}_0,\quad \mathtt{Q}^+_3\mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0 \\
+n_k = \ad_k a_k &\mathtt{Q}^+_k \mathtt{Q}^-_k = \proj{1}_k=\frac12(\mathbb{I} - \mathtt{Z})_k \\\hline
+\end{array}
+$$
+%\begin{table}[h!]
+%    \centering
+%    \caption{Correspondance JWT pour un système à 4 orbitales}
+%    \begin{tabular}{l|l}
+%        \toprule
+%        \textbf{Fermion} & \textbf{Qubit} \\
+%        \midrule
+%        $a_0^\dagger$ & $\mathtt{Q}_0^+$ \\
+%        $a_1^\dagger$ & $\mathtt{Q}_1^+ \mathtt{Z}_0$ \\
+%        $a_2^\dagger$ & $\mathtt{Q}_2^+ \mathtt{Z}_1 \mathtt{Z}_0$ \\
+%        $a_3^\dagger$ & $\mathtt{Q}_3^+ \mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0$ \\
+%        $n_k$ & $\frac12(\mathbb{I} - \mathtt{Z}_k)$ \\
+%        \bottomrule
+%    \end{tabular}
+%    \label{tab:jwt_mapping}
+%\end{table}
 
 
 \subsection{Transformation de parité}
