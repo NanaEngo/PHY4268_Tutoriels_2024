@@ -1,0 +1,17 @@
+
+
+xtb calculations of BODIPY  
+,xtb calc
+HOMO-LUMO GAP (eV),1.790732866471
+TOTAL ENERGY (a.u.),-39.530635215598
+HOMO Index,35.0
+LUMO Index,36.0
+
+
+HF calculations of BODIPY with xTB optimization 
+,Energy 3 (a.u.)
+Total Energy,-677.2739986655151
+Nuclear Repulsion Energy,866.7107567257588
+One-electron Energy,-2648.6335925159156
+Two-electron Energy,1104.6488371246417
+HL gap (eV),7.9346349881314975

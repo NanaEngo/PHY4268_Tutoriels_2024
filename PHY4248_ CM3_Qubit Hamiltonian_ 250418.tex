@@ -2,7 +2,7 @@
 \def\input@path{{./Graphics/}} % Définition du chemin d'entrée pour les graphiques
 \makeatother
 
-\documentclass[12pt,a4paper]{article} % Classe de document
+\documentclass[12pt,a4paper,svgnames,x11names,rgb,table]{article} % Classe de document
 
 % Chargement des packages essentiels
 \usepackage[utf8]{inputenc} % Encodage UTF-8
@@ -44,7 +44,7 @@ colframe=green!55!black,separator sign dash,breakable,beamer}{exp}
 \usepackage{float} % Gère le placement des objets flottants
 \floatplacement{figure}{H} % Forces les figures à être placées exactement à l'endroit où elles apparaissent dans le texte
 
- \usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
+% \usepackage[svgnames,x11names,rgb,table]{xcolor} % Définit les couleurs par noms
 \usepackage{array, multicol, wrapfig, lmodern, multirow, booktabs, chemformula} % Diverses améliorations de mise en forme
 \usepackage[detect-all=true, group-minimum-digits=4]{siunitx} % Pour les unités SI
 
@@ -116,7 +116,7 @@ Ce chapitre fait partie de la séquence d'apprentissage suivante :
 \end{itemize}
 \end{tcolorbox}
 
-Après avoir établi les bases théoriques de la génération des intégrales moléculaires (théorie Hartree-Fock) dans les Chapitres 1 et 2, le présent Chapitre aborde le principe de l'encodage d'un problème de structure électronique en seconde quantification sur un calculateur quantique. L'objectif est d'établir une correspondance entre les opérateurs d'échelle fermioniques (Hamiltonien en seconde quantification ou Hamiltonien fermionique) et les opérateurs de Pauli (Hamiltonien Qubit). Cela se fait à travers les transformations de Jordan-Wigner (JWT), de parité (PT) ou de Bravyi-Kitaev (BKT) (voir les parties marquées en rouge sur la \autoref{fig:VQE_flowchart} présentant la VQE).
+Après avoir établi les bases théoriques de la génération des intégrales moléculaires selon la théorie Hartree-Fock dans les Chapitres 1 et 2, le présent Chapitre aborde le principe d'encodage d'un problème de structure électronique en seconde quantification sur un calculateur quantique. L'objectif est d'établir une correspondance entre les opérateurs d'échelle fermioniques, tels que l'Hamiltonien en seconde quantification ou l'Hamiltonien fermionique, et les opérateurs de Pauli, représentant l'Hamiltonien Qubit. Cette correspondance est réalisée à travers les transformations de Jordan-Wigner (JWT), de parité (PT) ou de Bravyi-Kitaev (BKT) (voir les parties marquées en rouge sur la \autoref{fig:VQE_flowchart} présentant la VQE).
 
 \begin{figure}[h!]
     \centering
@@ -248,7 +248,7 @@ où :
     \item Le symbole $\oplus$ représente l'addition modulo 2, c'est-à-dire $1 \oplus 1 = 0$ et $0 \oplus 1 = 1$.
     \item L'opérateur de création $a^\dagger_i$ ajoute un électron dans une orbitale inoccupée $i$ (ou dans $\ket{f_i}$).
     \item L'opérateur d'annihilation $a_i$ supprime un électron dans une orbitale occupée $i$ (ou en $\ket{f_i}$).
-    \item $a_i^2 = (a^\dagger_i)^2 = 0$ pour tout $i$. On ne peut pas créer ou anéantir un fermion dans le même mode deux fois.
+    \item $a_i^2 = (a^\dagger_i)^2 = 0$ pour tout $i$. On ne peut pas créer ou annihiler un fermion dans le même mode deux fois.
 \end{itemize}
 Par exemple :
 \begin{align}\label{eq:fermion_example}
@@ -290,7 +290,7 @@ L'Hamiltonien électronique en seconde quantification s'exprime comme :
 \begin{equation}\label{eq:H_elec}
 \mathtt{H}_{\rm elec} = \underbrace{\sum_{pq} h_{pq} a^\dagger_p a_q}_{\text{Termes à 1 électron}} + \frac12 \underbrace{\sum_{pqrs} h_{pqrs} a^\dagger_p a^\dagger_q a_r a_s}_{\text{Termes à 2 électrons}}
 \end{equation}
-L'opérateur $a^{\dagger}_p a_q $ est l'\textbf{opérateur d'excitation}: il excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$. La \autoref{fig:Integrales_fermioniques} permet de visualiser l'Hamiltonien en seconde quantification.
+L'opérateur $a^{\dagger}_p a_q $ représente l'\textbf{opérateur d'excitation}: il excite un électron du spin-orbite occupé $\phi_q$ vers le spin-orbite inoccupé $\phi_p$. La \autoref{fig:Integrales_fermioniques} permet de visualiser l'Hamiltonien en seconde quantification.
 \begin{figure}[h]
     \centering
     \includegraphics[width=.7\linewidth]{Integrales_fermioniques.pdf}
@@ -338,7 +338,7 @@ Le \autoref{tab:integrales} résume les correspondances entre les éléments du 
 \end{marker}
 
 \begin{example}{Molécule de \ch{H2} dans une base minimale}{}
-Pour la molécule \ch{H2}, qui possède 2 orbitales moléculaires $\phi_0$ et $\phi_1$, on peut considérer les points suivants :
+Pour la molécule \ch{H2}, qui possède 2 orbitales moléculaires $\phi_0$ et $\phi_1$, nous pouvons considérer les points suivants :
 \begin{itemize}
     \item Termes à 1 électron : $h_{00}$, $h_{11}$, $h_{01}$ (symétrie $h_{01}=h_{10}$).
     \item Termes à 2 électrons : Seule $h_{0011}$ contribue significativement.
@@ -399,7 +399,7 @@ Les opérateurs de Pauli $\{\mathbb{I}, \mathtt{X}, \mathtt{Y}, \mathtt{Z}\}$
 && i \mathtt{Y} := \ket{0}\bra{1} - \ket{1}\bra{0}, 
 & \mathtt{Z} := \op{0} - \op{1}.
 \end{align}
-constituent un ensemble d'opérateurs, qui sont à la fois Hermitiens et unitaires, formant ainsi une base complète pour l'espace des opérateurs agissant sur un qubit. Cela signifie que \textbf{tout opérateur agissant sur un qubit peut être exprimé comme une combinaison linéaire des matrices de Pauli}. Cette propriété est essentielle pour la simulation quantique, car elle permet de décomposer l'Hamiltonien électronique en termes de produits des opérateurs de Pauli :
+constituent un ensemble d'opérateurs qui sont à la fois Hermitiens et unitaires, formant ainsi une base complète pour l'espace des opérateurs agissant sur un qubit. Cela signifie qu'ils peuvent être utilisés pour exprimer toute opération possible sur un qubit de manière unique. Cette propriété est essentielle pour la simulation quantique, car elle permet de décomposer l'Hamiltonien électronique en termes de produits des opérateurs de Pauli :
 \begin{equation}\label{eq:pauli_decomposition}
 \mathtt{P}_j = \mathtt{X}_{M-1}^j \otimes \mathtt{X}_{M-2}^j \otimes \mathtt{X}_k^j \otimes \dots \otimes \mathtt{X}_0^j = \bigotimes_{i=0}^{M-1} \mathtt{X}_i^j,
 \end{equation}
@@ -415,19 +415,19 @@ où les opérateurs de Pauli $\mathtt{X}^j \in \{\mathbb{I}, \mathtt{X}, \mathtt
 \end{cases}
 \end{aligned}
 \end{equation}
-L'Hamiltonien total peut alors être représenté comme la combinaison linéaire de $\mathtt{P}_j$ :
+L'Hamiltonien total peut alors être représenté comme une combinaison linéaire des $\mathtt{P}_j$ :
 \begin{align}\label{eq:hamiltonian_pauli}
 & \mathtt{H} = \sum_{j=1}^{N_k} w_j \mathtt{P}_j = \sum_{j=1}^{N_k} w_j \left( \bigotimes_{i=0}^{M-1} \mathtt{X}_i^j \right), \\
 & w_j = \langle \mathtt{H}, \mathtt{P}_j \rangle = \text{Tr}(\mathtt{H}^\dagger \mathtt{P}_j),
 \end{align}
-où $w_j$ sont les poids de la chaîne de Pauli $\mathtt{P}_j$, $i$ indique sur quel qubit l'opérateur agit, et $j$ désigne le terme dans l'Hamiltonien.
+où $w_j$ sont les coefficients de la chaîne de Pauli $\mathtt{P}_j$, $i$ indique sur quel qubit l'opérateur agit, et $j$ désigne le terme dans l'Hamiltonien.
 
 Pour un Hamiltonien de la 2e quantification, le nombre total de chaînes de Pauli $N_k$ dépend du nombre de termes $h_{pq}$ à 1-électron et $h_{pqrs}$ à 2-électrons.
 
 \subsubsection{Opérateurs d'échelle qubit}
 
 \begin{definition}{Opérateurs d'échelle qubit}{}
-Les opérateurs d'échelle qubit sont des opérateurs qui agissent localement sur les qubits et qui permettent de créer ou d'annihiler des excitations dans le système quantique. Ils sont analogues aux opérateurs de création et d'annihilation fermioniques, mais agissent sur les qubits au lieu des orbitales de spin.
+Les opérateurs d'échelle qubit sont des opérateurs qui agissent localement sur les qubits et qui permettent de créer ou d'annihiler des excitations dans le système quantique. Ils sont analogues aux opérateurs de création et d'annihilation fermioniques, mais agissent spécifiquement sur les qubits plutôt que sur les orbitales de spin.
 \end{definition}
 $$
 \begin{array}{l|l}
@@ -469,33 +469,16 @@ Les opérateurs fermioniques se transforment en :
 a_k^\dagger &\mapsto \frac12(\mathtt{X}_k - i\mathtt{Y}_k) \otimes \bigotimes_{m=0}^{k-1} \mathtt{Z}_m \label{eq:jwt_creation} \\
 a_k &\mapsto \frac12(\mathtt{X}_k + i\mathtt{Y}_k) \otimes \bigotimes_{m=0}^{k-1} \mathtt{Z}_m \label{eq:jwt_annihilation}
 \end{align}
-Par exemple, puisque $\mathtt{Z}_k^2=\mathbb{I}_k$, on a la correspondance JWT suivante pour un système à 4 orbitales
+Par exemple, puisque $\mathtt{Z}_k^2=\mathbb{I}_k$, on a la correspondance JWT suivante pour un système à 4 orbitales:
 $$
 \begin{array}{l|l}
 \textbf{Fermion}  & \textbf{Qubit}  \\\hline
 a\ket{0001}+b\ket{0010}+c\ket{0100}+d\ket{1000} & a\ket{0001}+b\ket{0010}+c\ket{0100}+d\ket{1000} \\
 a_0,\quad  a_1,\quad  a_2,\quad a_3 &\mathtt{Q}^-_0,\quad \mathtt{Q}^-_1\mathtt{Z}_0,\quad \mathtt{Q}^-_2\mathtt{Z}_1 \mathtt{Z}_0,\quad \mathtt{Q}^-_3\mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0 \\
-\ad_0,\quad \ad_1,\quad \ad_2,\quad \ad_3 & \mathtt{Q}^+_0,\quad \mathtt{Q}^+_1\mathtt{Z}_0,\quad \mathtt{Q}^+_2\mathtt{Z}_1 \mathtt{Z}_0,\quad \mathtt{Q}^+_3\mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0 \\
-n_k = \ad_k a_k &\mathtt{Q}^+_k \mathtt{Q}^-_k = \proj{1}_k=\frac12(\mathbb{I} - \mathtt{Z})_k \\\hline
+a^\dagger_0,\quad a^\dagger_1,\quad a^\dagger_2,\quad a^\dagger_3 & \mathtt{Q}^+_0,\quad \mathtt{Q}^+_1\mathtt{Z}_0,\quad \mathtt{Q}^+_2\mathtt{Z}_1 \mathtt{Z}_0,\quad \mathtt{Q}^+_3\mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0 \\
+n_k = a^\dagger_k a_k &\mathtt{Q}^+_k \mathtt{Q}^-_k = \op{1}_k=\frac12(\mathbb{I} - \mathtt{Z})_k \\\hline
 \end{array}
 $$
-%\begin{table}[h!]
-%    \centering
-%    \caption{Correspondance JWT pour un système à 4 orbitales}
-%    \begin{tabular}{l|l}
-%        \toprule
-%        \textbf{Fermion} & \textbf{Qubit} \\
-%        \midrule
-%        $a_0^\dagger$ & $\mathtt{Q}_0^+$ \\
-%        $a_1^\dagger$ & $\mathtt{Q}_1^+ \mathtt{Z}_0$ \\
-%        $a_2^\dagger$ & $\mathtt{Q}_2^+ \mathtt{Z}_1 \mathtt{Z}_0$ \\
-%        $a_3^\dagger$ & $\mathtt{Q}_3^+ \mathtt{Z}_2 \mathtt{Z}_1 \mathtt{Z}_0$ \\
-%        $n_k$ & $\frac12(\mathbb{I} - \mathtt{Z}_k)$ \\
-%        \bottomrule
-%    \end{tabular}
-%    \label{tab:jwt_mapping}
-%\end{table}
-
 
 \subsection{Transformation de parité}
 
@@ -509,11 +492,11 @@ Cette transformation encode la parité cumulative des occupations orbitales :
 &\mathtt{P}_k^\pm =Q^\pm_k \otimes \op{0}_{k-1} - Q^\mp_k \otimes \op{1}_{k-1} .
 \end{align}
 
-Pour établir la correspondance à la base de parité on utilise 
+Pour établir la correspondance à la base de parité, on utilise 
 \begin{equation}
      p_k = \sum_j [ \pi_n]_{kj}\ f_j,
 \end{equation}
-où $n$ est le nombre d'orbitales, et $\pi_n$ la matrice $(n\times n)$ suivante
+où $n$ représente le nombre d'orbitales, et $\pi_n$ est la matrice $(n\times n)$ suivante : 
 \begin{align}
  & [\pi_n]_{kj} =  
   \begin{cases}
@@ -527,10 +510,9 @@ où $n$ est le nombre d'orbitales, et $\pi_n$ la matrice $(n\times n)$ suivante
   \vdots  & \vdots  & \ddots & \vdots  \\
   0 & 0 & \cdots & 1
  \end{pmatrix}
-\end{align}
-Il est important de souligner qu'on indexe la matrice $\pi_n$ à partir du coin inférieur droit, afin de garantir la cohérence avec notre schéma de numérotation orbitale. 
+\end{align}  
 
-Par exemple, pour changer l'état de base du numéro d'occupation $|1 0 1 0 0 1 1 1\rangle$ en son état de base de parité correspondant $|1 0 0 1 1 1 0 1\rangle$, nous appliquons la matrice $\pi_8$ sur la chaîne de bits appropriée :
+Par exemple, pour modifier l'état de base du numéro d'occupation $|1 0 1 0 0 1 1 1\rangle$ afin qu'il corresponde à son état de base de parité, $|1 0 0 1 1 1 0 1\rangle$, nous appliquons la matrice $\pi_8$ à la chaîne de bits appropriée :
 \begin{equation}
     \begin{matrix}
 & \begin{matrix}f_7 & f_6 & f_5 & f_4 & f_3 & f_2 & f_1 & f_0 \end{matrix} \\
@@ -699,14 +681,14 @@ $$
 
 \subsection{Exemple : Molécule d'hydrogène}\label{sec:H2_example}
 
-Considérons la molécure H$_2$ dans une base STO-3G. L'Hamiltonien fermionique se réduit à :
+Considérons la molécure \ch{H2} dans une base STO-3G. L'Hamiltonien fermionique se réduit à :
 \begin{equation}
-H = -1.05\ \mathbb{I} + 0.79\mathtt{Z}_0 + 0.79\mathtt{Z}_1 + 0.60\mathtt{Z}_0Z_1 + 0.20\mathtt{Y}_0\mathtt{Y}_1
+\mathtt{H} = -1.05\ \mathbb{I} + 0.79\mathtt{Z}_0 + 0.79\mathtt{Z}_1 + 0.60\mathtt{Z}_0Z_1 + 0.20\mathtt{Y}_0\mathtt{Y}_1
 \end{equation}
 
 \begin{table}[h!]
     \centering
-    \caption{Comparaison des mappings pour H$_2$ (6 qubits)}
+    \caption{Comparaison des mappings pour \ch{H2} (6 qubits)}
     \begin{tabular}{lccc}
         \toprule
         \textbf{Métrique} & JWT & PT & BKT \\
@@ -737,9 +719,7 @@ H = -1.05\ \mathbb{I} + 0.79\mathtt{Z}_0 + 0.79\mathtt{Z}_1 + 0.60\mathtt{Z}_0Z_
 \item both the above?
 \end{enumerate}
 
-\item Name three fermion-to-qubit transformations currently supported by Qiskit Nature.
-
-\item Name two fermion to qubit transformations that simulate a system of electrons with the same number of qubits as electrons.
+\item Name two fermion to qubit transformations that simulate a system of electrons, with the number of qubits equal to the number of electrons.
 
 \item For which transformation does the resulting Hamiltonian commute with the number operators for spin-up and spin-down states? These operators can be utilized to taper off two qubits.
 \end{enumerate}
@@ -755,7 +735,7 @@ Ce chapitre a présenté les fondements théoriques et pratiques de la conversio
     \item Le choix du mapping affecte directement l'efficacité du calcul quantique.
 \end{itemize}
 
-Ces concepts seront mis en pratique lors des ateliers à travers l'implémentation complète d'un algorithme VQE pour la molécule de H$_2$ sur un simulateur quantique.
+Ces concepts seront mis en pratique lors des ateliers grâce à l'implémentation complète d'un algorithme VQE (Variational Quantum Eigensolver) pour la molécule de \ch{H2} sur un simulateur quantique.
 
 \end{document}
 

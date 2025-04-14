@@ -1,0 +1,63 @@
+ \begin{tikzpicture}[
+    node distance=1.5cm,
+    orbital/.style={circle, draw=blue!60, fill=blue!5, minimum size=1cm, thick},
+    operator/.style={rectangle, draw=red!60, fill=red!5, minimum size=0.8cm, thick},
+    arrow/.style={-{Stealth[length=3mm]}},
+    interaction/.style={dashed, green!50!black, thick},
+    annotation/.style={text width=6cm, align=center, font=\small}
+]
+==================== PARTIE A : Termes à 1 électron ====================
+\node[anchor=south west] at (1,.5) (titleA) {\textbf{(a) Termes à 1 électron}};
+
+% Orbitales
+\node[orbital] (p) at (2,0) {$\phi_p$};
+\node[orbital] (q) at (5,0) {$\phi_q$};
+
+% Opérateurs
+\node[operator] (ap) at (1,-2) {$a_p^\dagger$};
+\node[operator] (aq) at (6,-2) {$a_q$};
+
+% Flèches et annotations
+\draw[arrow, blue] (ap) -- node[midway, left] {Crée dans $p$} (p.south west);
+\draw[arrow, red] (q.south east) -- node[midway, right] {Détruit dans $q$} (aq);
+
+% Terme complet
+\node[operator] (term1) at (3.5,-2.5) {$a_p^\dagger a_q$};
+\draw[arrow, dotted] (p) -- (term1.north);
+\draw[arrow, dotted] (q) -- (term1.north);
+
+% Annotation physique
+\node[annotation, below=0.1cm of term1] {Excitation $q\to p$};
+
+% ==================== PARTIE B : Termes à 2 électrons ====================
+\node[anchor=south west] at (1,-4.5) (titleB) {\textbf{(b) Termes à 2 électrons}};
+
+% Orbitales
+\node[orbital] (p1) at (2,-5) {$\phi_p$};
+\node[orbital] (q1) at (5,-5) {$\phi_q$};
+\node[orbital] (r1) at (2,-7) {$\phi_r$};
+\node[orbital] (s1) at (5,-7) {$\phi_s$};
+
+% Opérateurs
+\node[operator] (ap1) at (0.5,-6) {$a_p^\dagger$};
+\node[operator] (aq1) at (6.5,-6) {$a_q^\dagger$};
+\node[operator] (ar1) at (0.5,-8) {$a_r$};
+\node[operator] (as1) at (6.5,-8) {$a_s$};
+
+% Flèches création/destruction
+\draw[arrow, blue] (ap1) -- node[midway, left] {Crée dans $p$} (p1.west);
+\draw[arrow, blue] (aq1) -- node[midway, right] {Crée dans $q$} (q1.east);
+\draw[arrow, red] (r1.west) -- node[midway, left] {Détruit dans $r$} (ar1);
+\draw[arrow, red] (s1.east) -- node[midway, right] {Crée dans $p$} (as1);
+
+% Interaction Coulombienne
+\draw[interaction] (p1) -- node[midway, right] {$h_{pqrs}$} (r1);
+\draw[interaction] (q1) -- node[midway, left] {$h_{pqrs}$}  (s1);
+
+% Terme complet
+\node[operator] (term2) at (3.5,-8) {$a_p^\dagger a_q^\dagger a_r a_s$};
+
+% Annotation physique
+\node[annotation, below=0.2cm of term2] {Répulsion entre paires $(p,r)$ et $(q,s)$};
+
+\end{tikzpicture}

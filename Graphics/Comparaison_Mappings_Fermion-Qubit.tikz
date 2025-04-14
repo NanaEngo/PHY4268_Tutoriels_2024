@@ -1,0 +1,39 @@
+\begin{tikzpicture}[
+    node distance = 1.3cm,
+    >=Stealth
+]
+
+% Styles de noeuds
+\tikzstyle{mapping} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=blue!10,drop shadow];
+\tikzstyle{metric} = [ellipse, minimum width=2cm, minimum height=0.8cm, text centered, draw=black, fill=green!30,
+        drop shadow];
+
+% Positionnement des mappings
+\node (jwt) [mapping] {JWT};
+\node (bkt) [mapping, left = of jwt] {Bravyi-Kitaev};
+\node (parity) [mapping, right = of jwt] {Parity};
+
+% Positionnement des métriques
+\node (gates_jwt) [metric, above = of jwt, yshift=-0.75cm] {$\mathcal{O}(N)$ gates};
+\node (qubits_jwt) [metric, below = of jwt, yshift=0.75cm] {$N$ qubits};
+
+\node (gates_bkt) [metric, above = of bkt, yshift=-0.75cm] {$\mathcal{O}(\log N)$ gates};
+\node (qubits_bkt) [metric, below = of bkt, yshift=0.75cm] {$N$ qubits};
+
+\node (gates_parity) [metric, above = of parity, yshift=-0.75cm] {$\mathcal{O}(N/2)$ gates};
+\node (qubits_parity) [metric, below = of parity, yshift=0.75cm] {$N$ qubits};
+
+% Dessin des flèches
+\draw[->] (jwt) -- (gates_jwt);
+\draw[->] (jwt) -- (qubits_jwt);
+
+\draw[->] (bkt) -- (gates_bkt);
+\draw[->] (bkt) -- (qubits_bkt);
+
+\draw[->] (parity) -- (gates_parity);
+\draw[->] (parity) -- (qubits_parity);
+
+% % Titre
+% \node[above = 2cm of jwt, font=\Large] (title) {Comparaison des Mappings Fermion-Qubit};
+
+\end{tikzpicture}

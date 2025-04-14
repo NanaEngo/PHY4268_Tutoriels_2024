@@ -1,0 +1,119 @@
+﻿\begin{tikzpicture}[
+    node distance=1cm,
+    title/.style={font=\bfseries\large},
+    annotation/.style={font=\footnotesize, align=center},
+    feature/.style={draw, rounded corners, fill=white, inner sep=2pt},
+    arrow/.style={-Stealth, thick}
+]
+
+% Couleurs thématiques
+\definecolor{jwblue}{RGB}{31,119,180}
+\definecolor{paritygreen}{RGB}{44,160,44}
+\definecolor{bktred}{RGB}{214,39,40}
+
+% =============================================================================
+% Jordan-Wigner
+% =============================================================================
+\node[title, jwblue] (jwtitle) at (0,0) {Jordan-Wigner};
+
+% Qubits
+\foreach \i in {0,...,3}
+    \draw[jwblue, thick] ({\i*1.2},-1) rectangle ({\i*1.2+0.8},-1.5) node[pos=0.5] (q\i) {};
+
+% Chaînes Z
+\draw[jwblue, dashed] (q3.north) -- ++(0,0.5) node[above] (top) {Occupation};
+\foreach \i in {0,...,3}
+    \draw[jwblue] (q\i.north) -- (top.south);
+
+% Opérateur
+\node[below=1.5cm of q1, jwblue] (jweq) {$a_2^\dagger \sim X_2 \otimes Z_1 \otimes Z_0$};
+\draw[arrow, jwblue] (jweq.north) -- (q1.south);
+
+% Annotations
+\node[feature, jwblue, above right=0.5cm and 1cm of q3] {
+    \begin{tabular}{l}
+        \textbf{Avantages} \\
+        - Simple à implémenter \\
+        - Mapping direct \\
+        \textbf{Inconvénients} \\
+        - Chaînes longues de Pauli-Z
+    \end{tabular}
+};
+
+% =============================================================================
+% Parité
+% =============================================================================
+\begin{scope}[xshift=5cm]
+\node[title, paritygreen] (paritytitle) at (0,0) {Parité};
+
+% Structure en échelle
+\foreach \i in {0,...,3} {
+    \draw[paritygreen, thick] ({\i*1.2},-1) rectangle ({\i*1.2+0.8},-1.5) node[pos=0.5] (p\i) {};
+    \ifnum\i>0
+        \draw[paritygreen, thick] (p\i.north west) -- ++(-0.6,0.7) node[xshift=-0.3cm,yshift=0.35cm,circle,fill=paritygreen] {};
+    \fi
+}
+
+% Équation
+\node[below=1.5cm of p1, paritygreen] (parityeq) {$a_2^\dagger \sim X_2 \otimes X_1 \otimes (\cdots)$};
+\draw[arrow, paritygreen] (parityeq.north) -- (p1.south);
+
+% Annotations
+\node[feature, paritygreen, above right=0.5cm and 1cm of p3] {
+    \begin{tabular}{l}
+        \textbf{Avantages} \\
+        - Réduction de la portée \\
+        - Préserve la parité \\
+        \textbf{Inconvénients} \\
+        - Complexité de calcul
+    \end{tabular}
+};
+\end{scope}
+
+% =============================================================================
+% Bravyi-Kitaev
+% =============================================================================
+\begin{scope}[xshift=10cm]
+\node[title, bktred] (bktitle) at (0,0) {Bravyi-Kitaev};
+
+% Arbre binaire
+\node[regular polygon, regular polygon sides=4, draw=bktred, thick, minimum size=0.8cm] (root) at (0,-1) {};
+\node[regular polygon, regular polygon sides=4, draw=bktred, thick, minimum size=0.8cm] (left) at (-1,-2) {};
+\node[regular polygon, regular polygon sides=4, draw=bktred, thick, minimum size=0.8cm] (right) at (1,-2) {};
+\draw[bktred, thick] (root) -- (left) (root) -- (right);
+
+% Équation
+\node[below=1.5cm of root, bktred] (bk eq) {$a_2^\dagger \sim X_2 \otimes Z_{\text{parent}}$};
+\draw[arrow, bktred] (bk eq.north) -- (root.south);
+
+% Annotations
+\node[feature, bktred, above right=0.5cm and 1cm of root] {
+    \begin{tabular}{l}
+        \textbf{Avantages} \\
+        - Optimisé pour la localité \\
+        - Meilleure échelle \\
+        \textbf{Inconvénients} \\
+        - Complexité algorithmique
+    \end{tabular}
+};
+\end{scope}
+
+% =============================================================================
+% Comparaisons
+% =============================================================================
+\matrix[matrix of nodes, 
+    nodes={anchor=center, font=\footnotesize},
+    row sep=0.2cm,
+    column sep=0.5cm,
+    below=2cm,
+    fill=gray!10,
+    rounded corners
+] at (5,-5) {
+    \textbf{Métrique} & \textbf{Jordan-Wigner} & \textbf{Parité} & \textbf{Bravyi-Kitaev} \\
+    Portée des opérateurs & O(N) & O(log N) & O(1) \\
+    Termes Pauli & 14 & 11 & 9 \\
+    Profondeur CNOT & 56 & 48 & 32 \\
+    Conservation symétries & Non & Partielle & Oui \\
+};
+
+\end{tikzpicture}

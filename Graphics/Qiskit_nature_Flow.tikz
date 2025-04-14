@@ -1,0 +1,105 @@
+
+\begin{tikzpicture}[
+    % Styles pour les boîtes
+    bluebox/.style={
+        draw=white,
+        fill=blue!30,
+        minimum width=2.2cm,
+        minimum height=1.2cm,
+        text=white,
+        font=\sffamily\bfseries,
+        align=center,
+        rounded corners=2pt,
+        drop shadow
+    },
+    purplebox/.style={
+        draw=white,
+        fill=violet!70,
+        minimum width=2.2cm,
+        minimum height=1.2cm,
+        text=white,
+        font=\sffamily\bfseries,
+        align=center,
+        rounded corners=2pt,
+        drop shadow
+    },
+    greenbox/.style={
+        draw=white,
+        fill=green!80!black,
+        minimum width=2.5cm,
+        minimum height=1.3cm,
+        text=white,
+        font=\sffamily\bfseries,
+        align=center,
+        rounded corners=2pt,
+        drop shadow
+    },
+    myarrow/.style={-{Stealth[length=5pt]}, thick},
+    bluearrow/.style={myarrow, blue!70!black},
+    greenarrow/.style={myarrow, green!50!black},
+    dashedline/.style={dashed, gray!50, thin},
+    section/.style={
+        draw=red,
+        thick,
+        rounded corners=3pt,
+        inner sep=0.35cm
+    }
+]
+
+% Position des nœuds pour la section 1
+\node[bluebox] (problem) at (0,4) {Problem};
+\node[bluebox] (es_driver) at (-0.5,2) {Electronic\\Structure\\Driver};
+\node[bluebox] (es_problem) at (2.5,2) {Electronic\\Structure\\Problem};
+
+\node[purplebox] (classical) at (-3,2) {Classical\\Methods};
+\node[purplebox] (geometry) at (-0.5,0) {Geometry\\Spin\\Charges};
+\node[purplebox] (transformers) at (2.5,0) {Transformers};
+
+% Section 2 nodes
+\node[bluebox] (second_quantized) at (6,4) {Second\\Quantized\\Operator};
+\node[bluebox] (fermionic) at (6,2) {Fermionic\\Operators};
+
+% Section 3 nodes
+\node[purplebox] (mapper) at (9,3) {Mapper};
+\node[bluebox] (qubit_operator) at (11.5,3) {Qubit\\Operator};
+
+% Texte sous Qubit Converter
+\node[text=white, font=\sffamily\small,] at (9,2.7) {Symmetries};
+
+% Section 4 node
+\node[greenbox] (quantum_alg) at (11.5,5.5) {Quantum\\Algorithms};
+
+% Flèches bleues
+\draw[bluearrow] (classical) -- (es_driver);
+\draw[bluearrow] (es_driver) -- (es_problem);
+\draw[bluearrow] (geometry) -- (es_driver);
+\draw[bluearrow] (transformers) -- (es_problem);
+\draw[bluearrow] (fermionic) -- (second_quantized);
+\draw[bluearrow] (mapper) -- (qubit_operator);
+
+% Flèches vertes
+\draw[greenarrow] (problem) -- (second_quantized);
+\draw[greenarrow] (es_problem) -- (fermionic);
+\draw[greenarrow] (second_quantized) -- (mapper);
+\draw[greenarrow] (qubit_operator) -- (quantum_alg);
+
+% Connexions en pointillés
+\draw[dotted] (problem) -- (es_driver);
+\draw[dotted] (problem) -- (es_problem);
+
+% Rectangles pour créer les sections
+\begin{scope}[on background layer]
+    \node[section, fit=(problem) (es_driver) (es_problem) (classical) (geometry) (transformers)] (section1) {};
+    \node[section, fit=(second_quantized) (fermionic), inner sep=0.3cm] (section2) {};
+    \node[section, fit=(mapper) (qubit_operator), inner sep=0.3cm] (section3) {};
+    \node[section, fit=(quantum_alg), inner sep=0.2cm] (section4) {};
+
+    % Numéros de section (positionnés en haut à droite à l'extérieur des cadres)
+    \node[red, font=\Large\bfseries,above] at (section1.north) {1};
+    \node[red, font=\Large\bfseries,above] at (section2.north)  {2};
+    \node[red, font=\Large\bfseries,above] at (section3.north) {3};
+    \node[red, font=\Large\bfseries,left] at (section4.west) {4};
+\end{scope}
+
+\end{tikzpicture}
+
